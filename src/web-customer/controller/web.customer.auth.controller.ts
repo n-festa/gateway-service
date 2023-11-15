@@ -9,7 +9,7 @@ import { WebCustomerAuthService } from '../service/web.customer.auth.service';
 import { OtpRequest } from '../dto/otp-request.dto';
 import { AuthenOtpRequest } from '../dto/authen-otp-request.dto';
 
-@Controller('web-customer-auth')
+@Controller('web-customer/auth')
 export class WebCustomerAuthController {
   constructor(private readonly authService: WebCustomerAuthService) {}
 
