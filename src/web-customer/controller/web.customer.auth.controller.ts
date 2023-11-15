@@ -6,8 +6,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { WebCustomerAuthService } from '../service/web.customer.auth.service';
-import { OtpRequest } from '../dto/RequestOTP.dto';
-import { AuthenOtpRequest } from '../dto/authenOtpRequest.dto';
+import { OtpRequest } from '../dto/otp-request.dto';
+import { AuthenOtpRequest } from '../dto/authen-otp-request.dto';
 
 @Controller('web-customer-auth')
 export class WebCustomerAuthController {

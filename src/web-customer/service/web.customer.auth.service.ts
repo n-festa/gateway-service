@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { AuthenOtpRequest } from '../dto/authenOtpRequest.dto';
+import { AuthenOtpRequest } from '../dto/authen-otp-request.dto';
 
 @Injectable()
 export class WebCustomerAuthService {
