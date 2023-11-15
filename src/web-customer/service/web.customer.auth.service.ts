@@ -19,4 +19,9 @@ export class WebCustomerAuthService {
     //   createTokenRequest.phoneNumber,
     // );
   }
+  async requestOTP(phoneNumber: string) {
+    return await firstValueFrom(
+      this.authClient.send({ cmd: 'request_otp' }, phoneNumber),
+    );
+  }
 }
