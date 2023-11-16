@@ -1,13 +1,17 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpException,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { WebCustomerAuthService } from '../service/web.customer.auth.service';
 import { OtpRequest } from '../dto/otp-request.dto';
 import { AuthenOtpRequest } from '../dto/authen-otp-request.dto';
+import { RefreshTokenGuard } from 'src/guards/refresh-token.guard';
+import { User } from 'src/decorator/user.decorator';
 
 @Controller('web-customer/auth')
 export class WebCustomerAuthController {
@@ -22,10 +26,22 @@ export class WebCustomerAuthController {
     }
     return res;
   }
+
   @Post('authenticate-otp')
   @HttpCode(200)
   async authenticateOTP(@Body() resData: AuthenOtpRequest) {
     const res = await this.authService.authenticateOTP(resData);
+    if (res.statusCode >= 400) {
+      throw new HttpException(res.message, res.statusCode);
+    }
+    return res;
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @HttpCode(200)
+  @Get('refresh-token')
+  async refreshToken(@User() user: any) {
+    const res = await this.authService.refreshToken(user);
     if (res.statusCode >= 400) {
       throw new HttpException(res.message, res.statusCode);
     }

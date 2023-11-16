@@ -16,4 +16,9 @@ export class WebCustomerAuthService {
       this.authClient.send({ cmd: 'authenticate_otp' }, data),
     );
   }
+  async refreshToken(user: any) {
+    return await firstValueFrom(
+      this.authClient.send({ cmd: 'refresh_token' }, user),
+    );
+  }
 }

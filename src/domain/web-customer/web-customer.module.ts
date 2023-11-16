@@ -7,6 +7,7 @@ import { WebCustomerService } from './service/web.customer.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AccessTokenJwtStrategy } from 'src/strategies/access-jwt.strategy';
+import { RefreshTokenJwtStrategy } from 'src/strategies/refresh-jwt.strategy';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AccessTokenJwtStrategy } from 'src/strategies/access-jwt.strategy';
     WebCustomerAuthService,
     WebCustomerService,
     AccessTokenJwtStrategy,
+    RefreshTokenJwtStrategy,
   ],
   exports: [WebCustomerAuthService, WebCustomerService],
 })
