@@ -18,6 +18,13 @@ import { RefreshTokenJwtStrategy } from 'src/strategies/refresh-jwt.strategy';
         options: { port: 3011 },
       },
     ]),
+    ClientsModule.register([
+      {
+        name: 'USER_SERVICE',
+        transport: Transport.TCP,
+        options: { port: 3018 },
+      },
+    ]),
     PassportModule.register({}),
     JwtModule.register({}),
   ],

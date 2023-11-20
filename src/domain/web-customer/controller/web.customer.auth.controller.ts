@@ -22,7 +22,7 @@ export class WebCustomerAuthController {
   async requestOTP(@Body() otpRequest: OtpRequest) {
     const res = await this.authService.requestOTP(otpRequest.phoneNumber);
     if (res.statusCode >= 400) {
-      throw new HttpException(res.message, res.statusCode);
+      throw new HttpException(res, res.statusCode);
     }
     return res;
   }
@@ -32,7 +32,7 @@ export class WebCustomerAuthController {
   async authenticateOTP(@Body() resData: AuthenOtpRequest) {
     const res = await this.authService.authenticateOTP(resData);
     if (res.statusCode >= 400) {
-      throw new HttpException(res.message, res.statusCode);
+      throw new HttpException(res, res.statusCode);
     }
     return res;
   }
@@ -43,7 +43,7 @@ export class WebCustomerAuthController {
   async refreshToken(@User() user: any) {
     const res = await this.authService.refreshToken(user);
     if (res.statusCode >= 400) {
-      throw new HttpException(res.message, res.statusCode);
+      throw new HttpException(res, res.statusCode);
     }
     return res;
   }
