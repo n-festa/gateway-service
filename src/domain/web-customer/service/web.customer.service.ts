@@ -7,9 +7,6 @@ import { GenericUser } from 'src/type';
 @Injectable()
 export class WebCustomerService {
   @Inject('USER_SERVICE') private readonly userClient: ClientProxy;
-  getCustomerProfile() {
-    return 'customer profile sample';
-  }
   async createCustomerProfile(
     requestData: CreateCustomerProfileRequest,
     userData: GenericUser,
@@ -19,6 +16,11 @@ export class WebCustomerService {
         { cmd: 'create_customer_profile' },
         { requestData, userData },
       ),
+    );
+  }
+  async getCustomerProfile(id: number) {
+    return await firstValueFrom(
+      this.userClient.send({ cmd: 'get_customer_profile' }, id),
     );
   }
 }

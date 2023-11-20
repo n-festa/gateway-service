@@ -4,7 +4,9 @@ import {
   Get,
   HttpCode,
   HttpException,
+  Param,
   Post,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { WebCustomerService } from '../service/web.customer.service';
@@ -22,12 +24,6 @@ export class WebCustomerController {
   constructor(private readonly webCustomerService: WebCustomerService) {}
 
   @Roles(Role.Customer)
-  @Get('customer-profile')
-  getCustomerProfile() {
-    return this.webCustomerService.getCustomerProfile();
-  }
-
-  @Roles(Role.Customer)
   @Post('create-customer-profile')
   @HttpCode(200)
   async createCustomerProfile(
@@ -38,6 +34,19 @@ export class WebCustomerController {
       requestData,
       user,
     );
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
+    }
+    return res;
+  }
+  @Roles(Role.Customer)
+  @Get('customer-profile/:id')
+  async getCustomerProfile(@Param('id') id: string, @User() user: GenericUser) {
+    //Check if token data is mapping with requested data
+    if (user.userId !== parseInt(id)) {
+      throw new UnauthorizedException('Cannot access other user info');
+    }
+    const res = await this.webCustomerService.getCustomerProfile(parseInt(id));
     if (res.statusCode >= 400) {
       throw new HttpException(res, res.statusCode);
     }
