@@ -10,6 +10,8 @@ import { AccessTokenJwtStrategy } from 'src/strategies/access-jwt.strategy';
 import { RefreshTokenJwtStrategy } from 'src/strategies/refresh-jwt.strategy';
 import { WebCustomerFoodController } from './controller/web.customer.food.controller';
 import { WebCustomerFoodService } from './service/web.customer.food.service';
+import { WebCustomerRestaurantController } from './controller/web.customer.restaurant.controller';
+import { WebCustomerRestaurantService } from './service/web.customer.restaurant.service';
 
 @Module({
   imports: [
@@ -37,6 +39,7 @@ import { WebCustomerFoodService } from './service/web.customer.food.service';
     WebCustomerAuthController,
     WebCustomerController,
     WebCustomerFoodController,
+    WebCustomerRestaurantController,
   ],
   providers: [
     WebCustomerAuthService,
@@ -44,7 +47,13 @@ import { WebCustomerFoodService } from './service/web.customer.food.service';
     AccessTokenJwtStrategy,
     RefreshTokenJwtStrategy,
     WebCustomerFoodService,
+    WebCustomerRestaurantService,
   ],
-  exports: [WebCustomerAuthService, WebCustomerService, WebCustomerFoodService],
+  exports: [
+    WebCustomerAuthService,
+    WebCustomerService,
+    WebCustomerFoodService,
+    WebCustomerRestaurantService,
+  ],
 })
 export class WebCustomerModule {}
