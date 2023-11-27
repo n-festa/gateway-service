@@ -8,6 +8,8 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AccessTokenJwtStrategy } from 'src/strategies/access-jwt.strategy';
 import { RefreshTokenJwtStrategy } from 'src/strategies/refresh-jwt.strategy';
+import { WebCustomerFoodController } from './controller/web.customer.food.controller';
+import { WebCustomerFoodService } from './service/web.customer.food.service';
 
 @Module({
   imports: [
@@ -17,24 +19,32 @@ import { RefreshTokenJwtStrategy } from 'src/strategies/refresh-jwt.strategy';
         transport: Transport.TCP,
         options: { port: 3011 },
       },
-    ]),
-    ClientsModule.register([
       {
         name: 'USER_SERVICE',
         transport: Transport.TCP,
         options: { port: 3018 },
       },
+      {
+        name: 'RESTAURANT_SERVICE',
+        transport: Transport.TCP,
+        options: { port: 3014 },
+      },
     ]),
     PassportModule.register({}),
     JwtModule.register({}),
   ],
-  controllers: [WebCustomerAuthController, WebCustomerController],
+  controllers: [
+    WebCustomerAuthController,
+    WebCustomerController,
+    WebCustomerFoodController,
+  ],
   providers: [
     WebCustomerAuthService,
     WebCustomerService,
     AccessTokenJwtStrategy,
     RefreshTokenJwtStrategy,
+    WebCustomerFoodService,
   ],
-  exports: [WebCustomerAuthService, WebCustomerService],
+  exports: [WebCustomerAuthService, WebCustomerService, WebCustomerFoodService],
 })
 export class WebCustomerModule {}
