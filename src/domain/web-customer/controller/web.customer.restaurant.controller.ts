@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get } from '@nestjs/common';
 import { WebCustomerRestaurantService } from '../service/web.customer.restaurant.service';
+import { RestaurantRecommendationRequest } from '../dto/restaurant-recommendation-request.dto';
 
 @Controller('web-customer/restaurant')
 export class WebCustomerRestaurantController {
@@ -8,7 +9,11 @@ export class WebCustomerRestaurantController {
   ) {}
 
   @Get('get-general-recomendation')
-  async getGeneralRestaurantRecomendation(): Promise<any> {
-    return this.restaurantService.getGeneralRestaurantRecomendation();
+  async getGeneralRestaurantRecomendation(
+    @Body() requestData: RestaurantRecommendationRequest,
+  ): Promise<any> {
+    return this.restaurantService.getGeneralRestaurantRecomendation(
+      requestData,
+    );
   }
 }
