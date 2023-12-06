@@ -12,6 +12,8 @@ import { WebCustomerFoodController } from './controller/web.customer.food.contro
 import { WebCustomerFoodService } from './service/web.customer.food.service';
 import { WebCustomerRestaurantController } from './controller/web.customer.restaurant.controller';
 import { WebCustomerRestaurantService } from './service/web.customer.restaurant.service';
+import { WebCustomerCategoryController } from './controller/web.customer.category.controller';
+import { WebCustomerCategoryService } from './service/web.customer.category.service';
 
 @Module({
   imports: [
@@ -40,6 +42,7 @@ import { WebCustomerRestaurantService } from './service/web.customer.restaurant.
     WebCustomerController,
     WebCustomerFoodController,
     WebCustomerRestaurantController,
+    WebCustomerCategoryController,
   ],
   providers: [
     WebCustomerAuthService,
@@ -48,12 +51,14 @@ import { WebCustomerRestaurantService } from './service/web.customer.restaurant.
     RefreshTokenJwtStrategy,
     WebCustomerFoodService,
     WebCustomerRestaurantService,
+    WebCustomerCategoryService,
   ],
   exports: [
     WebCustomerAuthService,
     WebCustomerService,
     WebCustomerFoodService,
     WebCustomerRestaurantService,
+    WebCustomerCategoryService,
   ],
 })
 export class WebCustomerModule {}
