@@ -1,7 +1,9 @@
 import { Body, Controller, Get } from '@nestjs/common';
 import { WebCustomerRestaurantService } from '../service/web.customer.restaurant.service';
 import { RestaurantRecommendationRequest } from '../dto/restaurant-recommendation-request.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Web customer restaurant')
 @Controller('web-customer/restaurant')
 export class WebCustomerRestaurantController {
   constructor(

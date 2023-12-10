@@ -17,7 +17,9 @@ import { AccessTokenGuard } from 'src/guards/access-token.guard';
 import { CreateCustomerProfileRequest } from '../dto/create-customer-profile-request.dto';
 import { User } from 'src/decorator/user.decorator';
 import { GenericUser } from 'src/type';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Web customer controller')
 @Controller('web-customer')
 @UseGuards(AccessTokenGuard, RolesGuard)
 export class WebCustomerController {

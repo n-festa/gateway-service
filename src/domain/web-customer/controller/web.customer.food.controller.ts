@@ -1,7 +1,8 @@
 import { Body, Controller, Get } from '@nestjs/common';
 import { WebCustomerFoodService } from '../service/web.customer.food.service';
 import { FoodRecommendationRequest } from '../dto/food-recommendation-request.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Web customer food')
 @Controller('web-customer/food')
 export class WebCustomerFoodController {
   constructor(private readonly foodService: WebCustomerFoodService) {}
