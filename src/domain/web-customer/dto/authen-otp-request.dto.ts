@@ -8,7 +8,7 @@ export class AuthenOtpRequest {
   })
   @IsNotEmpty()
   @IsString()
-  @IsPhoneNumber()
+  // @IsPhoneNumber()
   phoneNumber: string;
 
   @ApiProperty({
