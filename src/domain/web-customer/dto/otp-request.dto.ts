@@ -8,6 +8,6 @@ export class OtpRequest {
   })
   @IsNotEmpty()
   @IsString()
-  @IsPhoneNumber()
+  // @IsPhoneNumber()
   phoneNumber: string;
 }
