@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpException,
+  HttpStatus,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -12,11 +13,14 @@ import { OtpRequest } from '../dto/otp-request.dto';
 import { AuthenOtpRequest } from '../dto/authen-otp-request.dto';
 import { RefreshTokenGuard } from 'src/guards/refresh-token.guard';
 import { User } from 'src/decorator/user.decorator';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Web customer authentication')
 @Controller('web-customer/auth')
 export class WebCustomerAuthController {
   constructor(private readonly authService: WebCustomerAuthService) {}
 
+  @ApiResponse({ status: HttpStatus.OK })
   @Post('request-otp')
   @HttpCode(200)
   async requestOTP(@Body() otpRequest: OtpRequest) {
@@ -27,6 +31,7 @@ export class WebCustomerAuthController {
     return res;
   }
 
+  @ApiResponse({ status: HttpStatus.OK })
   @Post('authenticate-otp')
   @HttpCode(200)
   async authenticateOTP(@Body() resData: AuthenOtpRequest) {
