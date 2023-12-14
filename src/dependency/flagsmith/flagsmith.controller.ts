@@ -14,7 +14,7 @@ export class FlagsmithController {
   }
   @Get('all')
   async getAllFlags() {
-    return this.flagsmithService.flags;
+    return this.flagsmithService.getFlags();
   }
   @Get('activate-identity/:id')
   async activateIdentity(@Param('id') id: string) {

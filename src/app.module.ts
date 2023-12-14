@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { WebCustomerModule } from './domain/web-customer/web-customer.module';
 import { configurationFactory } from './shared/config/configuration-factory';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FlagsmithModule } from './dependency/flagsmith/flagsmith.module';
+import { ClientProxyFactory } from '@nestjs/microservices';
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -17,6 +19,33 @@ import { FlagsmithModule } from './dependency/flagsmith/flagsmith.module';
     FlagsmithModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'RESTAURANT_SERVICE',
+      useFactory: (configService: ConfigService) => {
+        const options = configService.get('microServices.restaurant');
+        return ClientProxyFactory.create(options);
+      },
+      inject: [ConfigService],
+    },
+    {
+      provide: 'AUTHORIZATION_SERVICE',
+      useFactory: (configService: ConfigService) => {
+        const options = configService.get('microServices.authorization');
+        return ClientProxyFactory.create(options);
+      },
+      inject: [ConfigService],
+    },
+    {
+      provide: 'USER_SERVICE',
+      useFactory: (configService: ConfigService) => {
+        const options = configService.get('microServices.user');
+        return ClientProxyFactory.create(options);
+      },
+      inject: [ConfigService],
+    },
+  ],
+  exports: ['RESTAURANT_SERVICE', 'AUTHORIZATION_SERVICE', 'USER_SERVICE'],
 })
 export class AppModule {}

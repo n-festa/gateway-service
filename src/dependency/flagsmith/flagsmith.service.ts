@@ -1,47 +1,56 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ClientProxy } from '@nestjs/microservices';
 import Flagsmith from 'flagsmith-nodejs/build/sdk';
 // import Flagsmith from 'flagsmith-nodejs';
 @Injectable()
 export class FlagsmitService {
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    private readonly restaurantClient: ClientProxy,
+  ) {}
   private flagsmith: Flagsmith;
-  public flags: any;
-  public identifier: string = '';
+  private flags: any;
+  private identifier: string = '';
+
   async init() {
     this.flagsmith = new Flagsmith({
       environmentKey: this.configService.get<string>('flagSmithKey'),
     });
-    await this.getEnvironmentFlags();
+    this.flags = await this.flagsmith.getEnvironmentFlags();
+
+    //Edit all of the micro-services
+    this.emitAllMicroServices();
   }
 
-  public async getEnvironmentFlags() {
-    this.flags = await this.flagsmith.getEnvironmentFlags();
-    console.log('running getEnvironmentFlags');
-  }
-  public async getIdentityFlags() {
-    // this.flags = await this.flagsmith.getIdentityFlags(this.identifier);
-    this.flags = await this.flagsmith.getIdentityFlags('rte');
-    console.log('running getIdentityFlags');
+  private emitAllMicroServices() {
+    this.restaurantClient.emit('refresh_flags', this.identifier);
   }
 
   public async refreshFlags() {
+    let mess = '';
     if (this.identifier == '') {
-      await this.getEnvironmentFlags();
-      return 'Get the environment flags successfully';
+      this.flags = await this.flagsmith.getEnvironmentFlags();
+      mess = 'Get the environment flags successfully';
     } else if (this.identifier != '') {
-      await this.getIdentityFlags();
-      return 'Get the indentity flags successfully';
+      this.flags = await this.flagsmith.getIdentityFlags(this.identifier);
+      mess = 'Get the indentity flags successfully';
     }
+    //Edit all of the micro-services
+    this.emitAllMicroServices();
+    return mess;
   }
   public async activateIdentity(identifier: string) {
     this.identifier = identifier;
     await this.refreshFlags();
-    return 'Activate the indentifier successfully';
+    return 'Activate the identifier successfully';
   }
   public async deactivateIdentity() {
     this.identifier = '';
     await this.refreshFlags();
-    return 'Deactivate the indentifier successfully';
+    return 'Deactivate the identifier successfully';
+  }
+  public getFlags() {
+    return this.flags;
   }
 }
