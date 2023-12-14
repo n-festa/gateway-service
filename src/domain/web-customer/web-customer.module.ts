@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { WebCustomerAuthController } from './controller/web.customer.auth.controller';
 import { WebCustomerAuthService } from './service/web.customer.auth.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { WebCustomerController } from './controller/web.customer.controller';
 import { WebCustomerService } from './service/web.customer.service';
 import { PassportModule } from '@nestjs/passport';
@@ -16,27 +15,7 @@ import { WebCustomerCategoryController } from './controller/web.customer.categor
 import { WebCustomerCategoryService } from './service/web.customer.category.service';
 
 @Module({
-  imports: [
-    ClientsModule.register([
-      {
-        name: 'AUTHORIZATION_SERVICE',
-        transport: Transport.TCP,
-        options: { port: 3011 },
-      },
-      {
-        name: 'USER_SERVICE',
-        transport: Transport.TCP,
-        options: { port: 3018 },
-      },
-      {
-        name: 'RESTAURANT_SERVICE',
-        transport: Transport.TCP,
-        options: { port: 3014 },
-      },
-    ]),
-    PassportModule.register({}),
-    JwtModule.register({}),
-  ],
+  imports: [PassportModule.register({}), JwtModule.register({})],
   controllers: [
     WebCustomerAuthController,
     WebCustomerController,
