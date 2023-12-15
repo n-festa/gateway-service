@@ -3,9 +3,7 @@ import { DEFAULT_PORT } from '../constants/config.constant';
 
 export const configurationFactory = () => ({
   appPort: +(process.env.APP_PORT || DEFAULT_PORT),
-  flagSmithKey:
-    process.env.FLAGSMITH_SERVER_SIDE_ENVIRONMENT_KEY ||
-    'ser.6DZMKXpjjZ2d6MPzjCTpte',
+  flagSmithKey: process.env.FLAGSMITH_SERVER_SIDE_ENVIRONMENT_KEY || '',
   microServices: {
     restaurant: {
       transport: Transport.TCP,
@@ -20,4 +18,5 @@ export const configurationFactory = () => ({
       options: { port: 3018 },
     },
   },
+  featureFlag: process.env.FEATURE_FLAG || '',
 });
