@@ -1,11 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { FoodRecommendationRequest } from '../dto/food-recommendation-request.dto';
+import { FlagsmitService } from 'src/dependency/flagsmith/flagsmith.service';
+import { SearchFoodByNameRequest } from '../dto/search-food-by-name-request.dto';
 
 @Injectable()
 export class WebCustomerFoodService {
   @Inject('RESTAURANT_SERVICE') private readonly restaurantClient: ClientProxy;
+  @Inject('FLAGSMITH_SERVICE') private readonly flagService: FlagsmitService;
   async getGeneralFoodRecomendation(
     data: FoodRecommendationRequest,
   ): Promise<any> {
@@ -15,5 +18,14 @@ export class WebCustomerFoodService {
         data,
       ),
     );
+  }
+
+  async searchByName(data: SearchFoodByNameRequest): Promise<any> {
+    if (this.flagService.isFeatureEnabled('fes-12-search-food-by-name')) {
+      return await lastValueFrom(
+        this.restaurantClient.send({ cmd: 'search_food_by_name' }, data),
+      );
+    } else {
+    }
   }
 }
