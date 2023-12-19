@@ -28,4 +28,13 @@ export class WebCustomerFoodService {
     } else {
     }
   }
+
+  async getFoodDetailById(id: number): Promise<any> {
+    if (this.flagService.isFeatureEnabled('fes-15-get-food-detail')) {
+      return await lastValueFrom(
+        this.restaurantClient.send({ cmd: 'get_food_detail_by_id' }, id),
+      );
+    } else {
+    }
+  }
 }
