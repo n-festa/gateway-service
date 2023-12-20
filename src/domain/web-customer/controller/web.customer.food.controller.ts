@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Inject } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  Inject,
+  Param,
+} from '@nestjs/common';
 import { WebCustomerFoodService } from '../service/web.customer.food.service';
 import { FoodRecommendationRequest } from '../dto/food-recommendation-request.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -25,6 +32,18 @@ export class WebCustomerFoodController {
   ): Promise<any> {
     if (this.flagService.isFeatureEnabled('fes-12-search-food-by-name')) {
       return await this.foodService.searchByName(searchRequest);
+    } else {
+    }
+  }
+
+  @Get('get-detail/:id')
+  async getFoodDetailById(@Param('id') id: number) {
+    if (this.flagService.isFeatureEnabled('fes-15-get-food-detail')) {
+      const res = await await this.foodService.getFoodDetailById(id);
+      if (res.statusCode >= 400) {
+        throw new HttpException(res, res.statusCode);
+      }
+      return res;
     } else {
     }
   }
