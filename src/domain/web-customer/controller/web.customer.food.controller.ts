@@ -39,7 +39,19 @@ export class WebCustomerFoodController {
   @Get('get-detail/:id')
   async getFoodDetailById(@Param('id') id: number) {
     if (this.flagService.isFeatureEnabled('fes-15-get-food-detail')) {
-      const res = await await this.foodService.getFoodDetailById(id);
+      const res = await this.foodService.getFoodDetailById(id);
+      if (res.statusCode >= 400) {
+        throw new HttpException(res, res.statusCode);
+      }
+      return res;
+    } else {
+    }
+  }
+
+  @Get('get-sku-list/:id')
+  async getListOfSkuById(@Param('id') id: number) {
+    if (this.flagService.isFeatureEnabled('fes-16-get-list-of-skus')) {
+      const res = await this.foodService.getListOfSkuById(id);
       if (res.statusCode >= 400) {
         throw new HttpException(res, res.statusCode);
       }
