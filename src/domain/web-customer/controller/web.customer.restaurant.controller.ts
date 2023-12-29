@@ -23,6 +23,22 @@ export class WebCustomerRestaurantController {
   async getGeneralRestaurantRecomendation(
     @Body() requestData: RestaurantRecommendationRequest,
   ): Promise<any> {
+    if (
+      this.flagService.isFeatureEnabled(
+        'fes-19-refactor-all-the-end-point-with-general-response',
+      )
+    ) {
+      const res =
+        await this.restaurantService.getGeneralRestaurantRecomendation(
+          requestData,
+        );
+      if (res.statusCode >= 400) {
+        throw new HttpException(res, res.statusCode);
+      }
+      return res;
+    }
+
+    //CURRENT LOGIC
     return this.restaurantService.getGeneralRestaurantRecomendation(
       requestData,
     );

@@ -23,6 +23,18 @@ export class WebCustomerFoodController {
   async getGeneralFoodRecomendation(
     @Body() foodRequest: FoodRecommendationRequest,
   ): Promise<any> {
+    if (
+      this.flagService.isFeatureEnabled(
+        'fes-19-refactor-all-the-end-point-with-general-response',
+      )
+    ) {
+      const res =
+        await this.foodService.getGeneralFoodRecomendation(foodRequest);
+      if (res.statusCode >= 400) {
+        throw new HttpException(res, res.statusCode);
+      }
+      return res;
+    }
     return await this.foodService.getGeneralFoodRecomendation(foodRequest);
   }
 
@@ -30,8 +42,17 @@ export class WebCustomerFoodController {
   async searchByName(
     @Body() searchRequest: SearchFoodByNameRequest,
   ): Promise<any> {
-    if (this.flagService.isFeatureEnabled('fes-12-search-food-by-name')) {
-      return await this.foodService.searchByName(searchRequest);
+    if (
+      this.flagService.isFeatureEnabled('fes-12-search-food-by-name') ||
+      this.flagService.isFeatureEnabled(
+        'fes-19-refactor-all-the-end-point-with-general-response',
+      )
+    ) {
+      const res = await this.foodService.searchByName(searchRequest);
+      if (res.statusCode >= 400) {
+        throw new HttpException(res, res.statusCode);
+      }
+      return res;
     } else {
     }
   }
@@ -44,8 +65,8 @@ export class WebCustomerFoodController {
         throw new HttpException(res, res.statusCode);
       }
       return res;
-    } else {
     }
+    //CURRENT LOGIC
   }
 
   @Get('get-sku-list/:id')
@@ -56,7 +77,7 @@ export class WebCustomerFoodController {
         throw new HttpException(res, res.statusCode);
       }
       return res;
-    } else {
     }
+    //CURRENT LOGIC
   }
 }
