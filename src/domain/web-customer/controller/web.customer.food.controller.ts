@@ -59,14 +59,11 @@ export class WebCustomerFoodController {
 
   @Get('get-detail/:id')
   async getFoodDetailById(@Param('id') id: number) {
-    if (this.flagService.isFeatureEnabled('fes-15-get-food-detail')) {
-      const res = await this.foodService.getFoodDetailById(id);
-      if (res.statusCode >= 400) {
-        throw new HttpException(res, res.statusCode);
-      }
-      return res;
+    const res = await this.foodService.getFoodDetailById(id);
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
     }
-    //CURRENT LOGIC
+    return res;
   }
 
   @Get('get-sku-list/:id')
