@@ -21,18 +21,11 @@ export class WebCustomerCategoryController {
   ) {}
   @Get()
   async getCategories() {
-    if (
-      this.flagService.isFeatureEnabled(
-        'fes-19-refactor-all-the-end-point-with-general-response',
-      )
-    ) {
-      const res = await this.categoryService.getCategories();
-      if (res.statusCode >= 400) {
-        throw new HttpException(res, res.statusCode);
-      }
-      return res;
+    const res = await this.categoryService.getCategories();
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
     }
-    return this.categoryService.getCategories();
+    return res;
   }
 
   @Post('search')
@@ -40,21 +33,11 @@ export class WebCustomerCategoryController {
   async searchFoodAndRestaurantByCategory(
     @Body() requestData: SearchByCategory,
   ) {
-    if (
-      this.flagService.isFeatureEnabled(
-        'fes-19-refactor-all-the-end-point-with-general-response',
-      )
-    ) {
-      const res =
-        await this.categoryService.searchFoodAndRestaurantByCategory(
-          requestData,
-        );
-      if (res.statusCode >= 400) {
-        throw new HttpException(res, res.statusCode);
-      }
-      return res;
+    const res =
+      await this.categoryService.searchFoodAndRestaurantByCategory(requestData);
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
     }
-    //CURRENT LOGIC
-    return this.categoryService.searchFoodAndRestaurantByCategory(requestData);
+    return res;
   }
 }
