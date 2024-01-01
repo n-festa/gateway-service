@@ -21,12 +21,9 @@ export class WebCustomerFoodService {
   }
 
   async searchByName(data: SearchFoodByNameRequest): Promise<any> {
-    if (this.flagService.isFeatureEnabled('fes-12-search-food-by-name')) {
-      return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'search_food_by_name' }, data),
-      );
-    } else {
-    }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'search_food_by_name' }, data),
+    );
   }
 
   async getFoodDetailById(id: number): Promise<any> {
