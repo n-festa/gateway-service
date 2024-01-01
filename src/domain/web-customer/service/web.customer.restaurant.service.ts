@@ -23,11 +23,8 @@ export class WebCustomerRestaurantService {
     );
   }
   async getRestaurantDetails(id: number): Promise<any> {
-    if (this.flagService.isFeatureEnabled('fes-18-get-restaurant-detail')) {
-      return await firstValueFrom(
-        this.restaurantClient.send({ cmd: 'get_restaurant_details' }, id),
-      );
-    }
-    //CURRENT LOGIC
+    return await firstValueFrom(
+      this.restaurantClient.send({ cmd: 'get_restaurant_details' }, id),
+    );
   }
 }
