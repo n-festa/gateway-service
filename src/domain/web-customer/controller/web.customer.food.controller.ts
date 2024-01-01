@@ -71,13 +71,10 @@ export class WebCustomerFoodController {
 
   @Get('get-sku-list/:id')
   async getListOfSkuById(@Param('id') id: number) {
-    if (this.flagService.isFeatureEnabled('fes-16-get-list-of-skus')) {
-      const res = await this.foodService.getListOfSkuById(id);
-      if (res.statusCode >= 400) {
-        throw new HttpException(res, res.statusCode);
-      }
-      return res;
+    const res = await this.foodService.getListOfSkuById(id);
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
     }
-    //CURRENT LOGIC
+    return res;
   }
 }

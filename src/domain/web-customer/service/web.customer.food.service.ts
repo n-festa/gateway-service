@@ -39,11 +39,8 @@ export class WebCustomerFoodService {
   }
 
   async getListOfSkuById(id: number): Promise<any> {
-    if (this.flagService.isFeatureEnabled('fes-16-get-list-of-skus')) {
-      return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'get_list_of_sku_by_id' }, id),
-      );
-    } else {
-    }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'get_list_of_sku_by_id' }, id),
+    );
   }
 }
