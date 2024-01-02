@@ -23,19 +23,11 @@ export class WebCustomerFoodController {
   async getGeneralFoodRecomendation(
     @Body() foodRequest: FoodRecommendationRequest,
   ): Promise<any> {
-    if (
-      this.flagService.isFeatureEnabled(
-        'fes-19-refactor-all-the-end-point-with-general-response',
-      )
-    ) {
-      const res =
-        await this.foodService.getGeneralFoodRecomendation(foodRequest);
-      if (res.statusCode >= 400) {
-        throw new HttpException(res, res.statusCode);
-      }
-      return res;
+    const res = await this.foodService.getGeneralFoodRecomendation(foodRequest);
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
     }
-    return await this.foodService.getGeneralFoodRecomendation(foodRequest);
+    return res;
   }
 
   @Get('search-by-name')
