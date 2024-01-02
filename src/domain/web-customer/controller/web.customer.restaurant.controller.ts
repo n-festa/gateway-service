@@ -46,13 +46,10 @@ export class WebCustomerRestaurantController {
 
   @Get('get-detail/:id')
   async getRestaurantDetails(@Param('id') id: number) {
-    if (this.flagService.isFeatureEnabled('fes-18-get-restaurant-detail')) {
-      const res = await await this.restaurantService.getRestaurantDetails(id);
-      if (res.statusCode >= 400) {
-        throw new HttpException(res, res.statusCode);
-      }
-      return res;
+    const res = await await this.restaurantService.getRestaurantDetails(id);
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
     }
-    //CURRENT LOGIC
+    return res;
   }
 }
