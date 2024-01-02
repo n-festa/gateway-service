@@ -27,12 +27,9 @@ export class WebCustomerFoodService {
   }
 
   async getFoodDetailById(id: number): Promise<any> {
-    if (this.flagService.isFeatureEnabled('fes-15-get-food-detail')) {
-      return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'get_food_detail_by_id' }, id),
-      );
-    } else {
-    }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'get_food_detail_by_id' }, id),
+    );
   }
 
   async getListOfSkuById(id: number): Promise<any> {
