@@ -27,7 +27,7 @@ async function bootstrap() {
   await setupSwagger(app);
 
   app.enableCors({
-    origin: 'http://localhost:4001',
+    origin: 'http://localhost:3001',
     credentials: true,
   });
 
