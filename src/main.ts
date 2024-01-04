@@ -26,6 +26,11 @@ async function bootstrap() {
 
   await setupSwagger(app);
 
+  app.enableCors({
+    origin: 'http://localhost:3001',
+    credentials: true,
+  });
+
   console.log(`---- APP PORT ${configService.get<number>('appPort')}`);
   await app.listen(configService.get<number>('appPort') || DEFAULT_PORT);
 }
