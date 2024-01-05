@@ -4,6 +4,8 @@ import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { FoodRecommendationRequest } from '../dto/food-recommendation-request.dto';
 import { FlagsmitService } from 'src/dependency/flagsmith/flagsmith.service';
 import { SearchFoodByNameRequest } from '../dto/search-food-by-name-request.dto';
+import { GetSideDishRequest } from '../dto/get-side-dish-request.dto';
+import { GetSideDishResonse } from '../dto/get-side-dish-response.dto';
 
 @Injectable()
 export class WebCustomerFoodService {
@@ -36,5 +38,18 @@ export class WebCustomerFoodService {
     return await lastValueFrom(
       this.restaurantClient.send({ cmd: 'get_list_of_sku_by_id' }, id),
     );
+  }
+
+  async getSideDishByMenuItemId(
+    data: GetSideDishRequest,
+  ): Promise<GetSideDishResonse> {
+    if (this.flagService.isFeatureEnabled('fes-23-get-side-dishes')) {
+      return await lastValueFrom(
+        this.restaurantClient.send(
+          { cmd: 'get_side_dish_by_menu_item_id' },
+          data,
+        ),
+      );
+    }
   }
 }
