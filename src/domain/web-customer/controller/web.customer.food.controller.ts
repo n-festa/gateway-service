@@ -11,6 +11,8 @@ import { FoodRecommendationRequest } from '../dto/food-recommendation-request.dt
 import { ApiTags } from '@nestjs/swagger';
 import { FlagsmitService } from 'src/dependency/flagsmith/flagsmith.service';
 import { SearchFoodByNameRequest } from '../dto/search-food-by-name-request.dto';
+import { GetSideDishResonse } from '../dto/get-side-dish-response.dto';
+import { GetSideDishRequest } from '../dto/get-side-dish-request.dto';
 @ApiTags('Web customer food')
 @Controller('web-customer/food')
 export class WebCustomerFoodController {
@@ -57,5 +59,22 @@ export class WebCustomerFoodController {
       throw new HttpException(res, res.statusCode);
     }
     return res;
+  }
+
+  @Get('get-side-dish/:id')
+  async getSideDishByMenuItemId(
+    @Param('id') id: number,
+  ): Promise<GetSideDishResonse> {
+    if (this.flagService.isFeatureEnabled('fes-23-get-side-dishes')) {
+      const inputData: GetSideDishRequest = {
+        menu_item_id: id,
+        timestamp: Date.now(),
+      };
+      const res = await this.foodService.getSideDishByMenuItemId(inputData);
+      if (res.statusCode >= 400) {
+        throw new HttpException(res, res.statusCode);
+      }
+      return res;
+    }
   }
 }
