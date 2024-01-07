@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   HttpCode,
+  HttpException,
   Inject,
   Post,
   UnauthorizedException,
@@ -43,6 +44,15 @@ export class WebCustomerCartController {
           "Cannot add item to other customer's cart",
         );
       }
+      const serviceRes = await this.cartService.addCartItem(requestData);
+      res.statusCode = serviceRes.statusCode;
+      res.message = serviceRes.message;
+      res.data = serviceRes.data;
+
+      if (res.statusCode >= 400) {
+        throw new HttpException(res, res.statusCode);
+      }
+
       return res;
     }
   }
