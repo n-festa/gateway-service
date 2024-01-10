@@ -69,6 +69,20 @@ export class WebCustomerCartController {
     if (this.flagsmithService.isFeatureEnabled('fes-28-update-cart')) {
       const res = new UpdateCartResponse(200, '');
 
+      if (user.userId !== requestData.customer_id) {
+        throw new UnauthorizedException(
+          "Cannot update item to other customer's cart",
+        );
+      }
+      const serviceRes = await this.cartService.updateCart(requestData);
+      if (serviceRes.statusCode >= 400) {
+        throw new HttpException(serviceRes, serviceRes.statusCode);
+      }
+
+      res.statusCode = serviceRes.statusCode;
+      res.message = serviceRes.message;
+      res.data = serviceRes.data;
+
       return res;
     }
   }
