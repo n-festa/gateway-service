@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpException,
   Inject,
+  Param,
   Post,
   UnauthorizedException,
   UseGuards,
@@ -54,6 +56,24 @@ export class WebCustomerCartController {
       }
 
       return res;
+    }
+  }
+
+  @Get('get-detail/:customer_id')
+  @Roles(Role.Customer)
+  async getCartDetail(
+    @User() user: GenericUser,
+    @Param('customer_id') customer_id: number,
+  ) {
+    if (this.flagsmithService.isFeatureEnabled('fes-27-get-cart-info')) {
+      //Check if user is authorized to get cart info
+      if (user.userId !== customer_id) {
+        throw new UnauthorizedException(
+          "Cannot get other customer's cart info",
+        );
+      }
+
+      return user;
     }
   }
 }
