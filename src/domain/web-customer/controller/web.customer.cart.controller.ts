@@ -19,6 +19,8 @@ import { AddToCartRequest } from '../dto/add-to-cart-request.dto';
 import { AddToCartResponse } from '../dto/add-to-cart-response.dto';
 import { User } from 'src/decorator/user.decorator';
 import { GenericUser } from 'src/type';
+import { UpdateCartRequest } from '../dto/update-cart-request.dto';
+import { UpdateCartResponse } from '../dto/update-cart-response.dto';
 
 @ApiTags(' Cart')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -52,6 +54,20 @@ export class WebCustomerCartController {
       if (res.statusCode >= 400) {
         throw new HttpException(res, res.statusCode);
       }
+
+      return res;
+    }
+  }
+
+  @Post('update')
+  @Roles(Role.Customer)
+  @HttpCode(200)
+  async updateCart(
+    @User() user: GenericUser,
+    @Body() requestData: UpdateCartRequest,
+  ): Promise<UpdateCartResponse> {
+    if (this.flagsmithService.isFeatureEnabled('fes-28-update-cart')) {
+      const res = new UpdateCartResponse(200, '');
 
       return res;
     }
