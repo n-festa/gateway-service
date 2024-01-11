@@ -4,6 +4,8 @@ import { FlagsmitService } from 'src/dependency/flagsmith/flagsmith.service';
 import { AddToCartRequest } from '../dto/add-to-cart-request.dto';
 import { AddToCartResponse } from '../dto/add-to-cart-response.dto';
 import { lastValueFrom } from 'rxjs';
+import { UpdateCartRequest } from '../dto/update-cart-request.dto';
+import { UpdateCartResponse } from '../dto/update-cart-response.dto';
 import { GetCartDetailResponse } from '../dto/get-cart-detail-response.dto';
 
 @Injectable()
@@ -26,6 +28,16 @@ export class WebCustomerCartService {
     if (this.flagService.isFeatureEnabled('fes-27-get-cart-info')) {
       return await lastValueFrom(
         this.restaurantClient.send({ cmd: 'get_cart_detail' }, customer_id),
+      );
+    }
+  }
+
+  async updateCart(
+    requestData: UpdateCartRequest,
+  ): Promise<UpdateCartResponse> {
+    if (this.flagService.isFeatureEnabled('fes-28-update-cart')) {
+      return await lastValueFrom(
+        this.restaurantClient.send({ cmd: 'update_cart' }, requestData),
       );
     }
   }

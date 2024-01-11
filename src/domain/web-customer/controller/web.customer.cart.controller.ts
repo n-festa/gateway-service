@@ -21,6 +21,8 @@ import { AddToCartRequest } from '../dto/add-to-cart-request.dto';
 import { AddToCartResponse } from '../dto/add-to-cart-response.dto';
 import { User } from 'src/decorator/user.decorator';
 import { GenericUser } from 'src/type';
+import { UpdateCartRequest } from '../dto/update-cart-request.dto';
+import { UpdateCartResponse } from '../dto/update-cart-response.dto';
 import { GetCartDetailResponse } from '../dto/get-cart-detail-response.dto';
 
 @ApiTags(' Cart')
@@ -76,6 +78,34 @@ export class WebCustomerCartController {
       }
       const serviceRes = await this.cartService.getCartDetail(customer_id);
 
+      if (serviceRes.statusCode >= 400) {
+        throw new HttpException(serviceRes, serviceRes.statusCode);
+      }
+
+      res.statusCode = serviceRes.statusCode;
+      res.message = serviceRes.message;
+      res.data = serviceRes.data;
+
+      return res;
+    }
+  }
+
+  @Post('update')
+  @Roles(Role.Customer)
+  @HttpCode(200)
+  async updateCart(
+    @User() user: GenericUser,
+    @Body() requestData: UpdateCartRequest,
+  ): Promise<UpdateCartResponse> {
+    if (this.flagsmithService.isFeatureEnabled('fes-28-update-cart')) {
+      const res = new UpdateCartResponse(200, '');
+
+      if (user.userId !== requestData.customer_id) {
+        throw new UnauthorizedException(
+          "Cannot update item to other customer's cart",
+        );
+      }
+      const serviceRes = await this.cartService.updateCart(requestData);
       if (serviceRes.statusCode >= 400) {
         throw new HttpException(serviceRes, serviceRes.statusCode);
       }
