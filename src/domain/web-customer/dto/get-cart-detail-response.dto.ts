@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GeneralResponse } from './general-response.dto';
 
-export class AddToCartResponse extends GeneralResponse {
+export class GetCartDetailResponse extends GeneralResponse {
   @ApiProperty()
-  data: AddToCartResponseData;
+  data: CartDetail;
 }
 
-interface AddToCartResponseData {
+interface CartDetail {
   customer_id: number;
   cart_info: CartItem[];
 }
