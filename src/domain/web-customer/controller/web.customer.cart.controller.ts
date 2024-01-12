@@ -24,6 +24,8 @@ import { GenericUser } from 'src/type';
 import { UpdateCartAdvancedRequest } from '../dto/update-cart-advanced-request.dto';
 import { UpdateCartAdvancedResponse } from '../dto/update-cart-advanced-response.dto';
 import { GetCartDetailResponse } from '../dto/get-cart-detail-response.dto';
+import { UpdateCartBasicRequest } from '../dto/update-cart-basic-request.dto';
+import { UpdateCartBasicResponse } from '../dto/update-cart-basic-response.dto';
 
 @ApiTags(' Cart')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -118,31 +120,31 @@ export class WebCustomerCartController {
     }
   }
 
-  // @Post('basic-update')
-  // @Roles(Role.Customer)
-  // @HttpCode(200)
-  // async updateCartBasic(
-  //   @User() user: GenericUser,
-  //   @Body() requestData: ,
-  // ): Promise<> {
-  //   if (this.flagsmithService.isFeatureEnabled('fes-28-update-cart')) {
-  //     const res = new (200, '');
+  @Post('basic-update')
+  @Roles(Role.Customer)
+  @HttpCode(200)
+  async updateCartBasic(
+    @User() user: GenericUser,
+    @Body() requestData: UpdateCartBasicRequest,
+  ): Promise<UpdateCartBasicResponse> {
+    if (this.flagsmithService.isFeatureEnabled('fes-28-update-cart')) {
+      const res = new UpdateCartBasicResponse(200, '');
 
-  //     if (user.userId !== requestData.customer_id) {
-  //       throw new UnauthorizedException(
-  //         "Cannot update item to other customer's cart",
-  //       );
-  //     }
-  //     const serviceRes = await this.cartService.updateCartAdvaced(requestData);
-  //     if (serviceRes.statusCode >= 400) {
-  //       throw new HttpException(serviceRes, serviceRes.statusCode);
-  //     }
+      if (user.userId !== requestData.customer_id) {
+        throw new UnauthorizedException(
+          "Cannot update item to other customer's cart",
+        );
+      }
+      const serviceRes = await this.cartService.updateCartBasic(requestData);
+      if (serviceRes.statusCode >= 400) {
+        throw new HttpException(serviceRes, serviceRes.statusCode);
+      }
 
-  //     res.statusCode = serviceRes.statusCode;
-  //     res.message = serviceRes.message;
-  //     res.data = serviceRes.data;
+      res.statusCode = serviceRes.statusCode;
+      res.message = serviceRes.message;
+      res.data = serviceRes.data;
 
-  //     return res;
-  //   }
-  // }
+      return res;
+    }
+  }
 }
