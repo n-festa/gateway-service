@@ -21,8 +21,8 @@ import { AddToCartRequest } from '../dto/add-to-cart-request.dto';
 import { AddToCartResponse } from '../dto/add-to-cart-response.dto';
 import { User } from 'src/decorator/user.decorator';
 import { GenericUser } from 'src/type';
-import { UpdateCartRequest } from '../dto/update-cart-request.dto';
-import { UpdateCartResponse } from '../dto/update-cart-response.dto';
+import { UpdateCartAdvancedRequest } from '../dto/update-cart-advanced-request.dto';
+import { UpdateCartAdvancedResponse } from '../dto/update-cart-advanced-response.dto';
 import { GetCartDetailResponse } from '../dto/get-cart-detail-response.dto';
 
 @ApiTags(' Cart')
@@ -90,22 +90,22 @@ export class WebCustomerCartController {
     }
   }
 
-  @Post('update')
+  @Post('advanced-update')
   @Roles(Role.Customer)
   @HttpCode(200)
-  async updateCart(
+  async updateCartAdvaced(
     @User() user: GenericUser,
-    @Body() requestData: UpdateCartRequest,
-  ): Promise<UpdateCartResponse> {
+    @Body() requestData: UpdateCartAdvancedRequest,
+  ): Promise<UpdateCartAdvancedResponse> {
     if (this.flagsmithService.isFeatureEnabled('fes-28-update-cart')) {
-      const res = new UpdateCartResponse(200, '');
+      const res = new UpdateCartAdvancedResponse(200, '');
 
       if (user.userId !== requestData.customer_id) {
         throw new UnauthorizedException(
           "Cannot update item to other customer's cart",
         );
       }
-      const serviceRes = await this.cartService.updateCart(requestData);
+      const serviceRes = await this.cartService.updateCartAdvaced(requestData);
       if (serviceRes.statusCode >= 400) {
         throw new HttpException(serviceRes, serviceRes.statusCode);
       }
@@ -117,4 +117,32 @@ export class WebCustomerCartController {
       return res;
     }
   }
+
+  // @Post('basic-update')
+  // @Roles(Role.Customer)
+  // @HttpCode(200)
+  // async updateCartBasic(
+  //   @User() user: GenericUser,
+  //   @Body() requestData: ,
+  // ): Promise<> {
+  //   if (this.flagsmithService.isFeatureEnabled('fes-28-update-cart')) {
+  //     const res = new (200, '');
+
+  //     if (user.userId !== requestData.customer_id) {
+  //       throw new UnauthorizedException(
+  //         "Cannot update item to other customer's cart",
+  //       );
+  //     }
+  //     const serviceRes = await this.cartService.updateCartAdvaced(requestData);
+  //     if (serviceRes.statusCode >= 400) {
+  //       throw new HttpException(serviceRes, serviceRes.statusCode);
+  //     }
+
+  //     res.statusCode = serviceRes.statusCode;
+  //     res.message = serviceRes.message;
+  //     res.data = serviceRes.data;
+
+  //     return res;
+  //   }
+  // }
 }

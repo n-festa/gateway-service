@@ -1,7 +1,7 @@
 import { ApiResponseProperty } from '@nestjs/swagger';
 import { GeneralResponse } from './general-response.dto';
 
-export class UpdateCartResponse extends GeneralResponse {
+export class UpdateCartAdvancedResponse extends GeneralResponse {
   @ApiResponseProperty()
   data: CartDetail;
 }
