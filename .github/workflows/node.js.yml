@@ -27,4 +27,4 @@ jobs:
     - run: yarn install --frozen-lockfile
     - run: yarn build
     - run: export PATH=$PATH:/home/ubuntu/.yarn/bin/
-    - run: pm2 restart gateway-service
+    - run: sudo pm2 restart gateway-service
