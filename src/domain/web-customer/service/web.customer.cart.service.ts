@@ -4,9 +4,11 @@ import { FlagsmitService } from 'src/dependency/flagsmith/flagsmith.service';
 import { AddToCartRequest } from '../dto/add-to-cart-request.dto';
 import { AddToCartResponse } from '../dto/add-to-cart-response.dto';
 import { lastValueFrom } from 'rxjs';
-import { UpdateCartRequest } from '../dto/update-cart-request.dto';
-import { UpdateCartResponse } from '../dto/update-cart-response.dto';
+import { UpdateCartAdvancedRequest } from '../dto/update-cart-advanced-request.dto';
+import { UpdateCartAdvancedResponse } from '../dto/update-cart-advanced-response.dto';
 import { GetCartDetailResponse } from '../dto/get-cart-detail-response.dto';
+import { UpdateCartBasicRequest } from '../dto/update-cart-basic-request.dto';
+import { UpdateCartBasicResponse } from '../dto/update-cart-basic-response.dto';
 
 @Injectable()
 export class WebCustomerCartService {
@@ -32,12 +34,25 @@ export class WebCustomerCartService {
     }
   }
 
-  async updateCart(
-    requestData: UpdateCartRequest,
-  ): Promise<UpdateCartResponse> {
+  async updateCartAdvaced(
+    requestData: UpdateCartAdvancedRequest,
+  ): Promise<UpdateCartAdvancedResponse> {
     if (this.flagService.isFeatureEnabled('fes-28-update-cart')) {
       return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'update_cart' }, requestData),
+        this.restaurantClient.send(
+          { cmd: 'update_cart_advanced' },
+          requestData,
+        ),
+      );
+    }
+  }
+
+  async updateCartBasic(
+    requestData: UpdateCartBasicRequest,
+  ): Promise<UpdateCartBasicResponse> {
+    if (this.flagService.isFeatureEnabled('fes-28-update-cart')) {
+      return await lastValueFrom(
+        this.restaurantClient.send({ cmd: 'update_cart_basic' }, requestData),
       );
     }
   }
