@@ -3,7 +3,7 @@ import { PhysicalActivityLevel } from 'src/enum';
 export class CreateCustomerProfileRequest {
   name: string;
   email: string;
-  birthday: Date;
+  birthday: string;
   sex: string;
   height_m: number;
   weight_kg: number;
