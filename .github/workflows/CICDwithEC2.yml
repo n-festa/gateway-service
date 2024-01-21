@@ -29,7 +29,7 @@ jobs:
       - name: rsync deployments
         uses: burnett01/rsync-deployments@6.0.0
         with:
-          switches: -avzr --delete-excluded='.env'
+          switches: -avzr --delete --exclude=".env"
           path: ./*
           remote_path: /var/www/gateway-service
           remote_host: 52.76.71.215
