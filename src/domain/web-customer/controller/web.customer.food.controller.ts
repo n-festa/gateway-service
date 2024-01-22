@@ -26,24 +26,17 @@ export class WebCustomerFoodController {
 
   @Get('get-general-food-recomendation')
   async getGeneralFoodRecomendation(
-    @Body() foodRequest: FoodRecommendationRequest,
+    // @Body() foodRequest: FoodRecommendationRequest,
     @Query('lat') lat: number,
     @Query('long') long: number,
   ): Promise<any> {
-    if (this.flagService.isFeatureEnabled('fes-30-refactor-get-method')) {
-      const FoodRecommendationRequest: FoodRecommendationRequest = {
-        lat: lat,
-        long: long,
-      };
-      const res = await this.foodService.getGeneralFoodRecomendation(
-        FoodRecommendationRequest,
-      );
-      if (res.statusCode >= 400) {
-        throw new HttpException(res, res.statusCode);
-      }
-      return res;
-    }
-    const res = await this.foodService.getGeneralFoodRecomendation(foodRequest);
+    const FoodRecommendationRequest: FoodRecommendationRequest = {
+      lat: lat,
+      long: long,
+    };
+    const res = await this.foodService.getGeneralFoodRecomendation(
+      FoodRecommendationRequest,
+    );
     if (res.statusCode >= 400) {
       throw new HttpException(res, res.statusCode);
     }
