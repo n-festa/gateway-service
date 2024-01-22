@@ -2,9 +2,12 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
   Inject,
   Param,
+  Post,
+  Query,
 } from '@nestjs/common';
 import { WebCustomerFoodService } from '../service/web.customer.food.service';
 import { FoodRecommendationRequest } from '../dto/food-recommendation-request.dto';
@@ -24,7 +27,22 @@ export class WebCustomerFoodController {
   @Get('get-general-food-recomendation')
   async getGeneralFoodRecomendation(
     @Body() foodRequest: FoodRecommendationRequest,
+    @Query('lat') lat: number,
+    @Query('long') long: number,
   ): Promise<any> {
+    if (this.flagService.isFeatureEnabled('fes-30-refactor-get-method')) {
+      const FoodRecommendationRequest: FoodRecommendationRequest = {
+        lat: lat,
+        long: long,
+      };
+      const res = await this.foodService.getGeneralFoodRecomendation(
+        FoodRecommendationRequest,
+      );
+      if (res.statusCode >= 400) {
+        throw new HttpException(res, res.statusCode);
+      }
+      return res;
+    }
     const res = await this.foodService.getGeneralFoodRecomendation(foodRequest);
     if (res.statusCode >= 400) {
       throw new HttpException(res, res.statusCode);
@@ -32,7 +50,9 @@ export class WebCustomerFoodController {
     return res;
   }
 
-  @Get('search-by-name')
+  // @Get('search-by-name')
+  @Post('search-by-name')
+  @HttpCode(200)
   async searchByName(
     @Body() searchRequest: SearchFoodByNameRequest,
   ): Promise<any> {

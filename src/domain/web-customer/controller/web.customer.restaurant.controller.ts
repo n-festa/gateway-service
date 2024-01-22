@@ -5,6 +5,7 @@ import {
   HttpException,
   Inject,
   Param,
+  Query,
 } from '@nestjs/common';
 import { WebCustomerRestaurantService } from '../service/web.customer.restaurant.service';
 import { RestaurantRecommendationRequest } from '../dto/restaurant-recommendation-request.dto';
@@ -22,7 +23,21 @@ export class WebCustomerRestaurantController {
   @Get('get-general-recomendation')
   async getGeneralRestaurantRecomendation(
     @Body() requestData: RestaurantRecommendationRequest,
+    @Query('lat') lat: number,
+    @Query('long') long: number,
   ): Promise<any> {
+    if (this.flagService.isFeatureEnabled('fes-30-refactor-get-method')) {
+      const data: RestaurantRecommendationRequest = {
+        lat: lat,
+        long: long,
+      };
+      const res =
+        await this.restaurantService.getGeneralRestaurantRecomendation(data);
+      if (res.statusCode >= 400) {
+        throw new HttpException(res, res.statusCode);
+      }
+      return res;
+    }
     const res =
       await this.restaurantService.getGeneralRestaurantRecomendation(
         requestData,
