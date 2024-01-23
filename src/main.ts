@@ -27,7 +27,11 @@ async function bootstrap() {
   await setupSwagger(app);
 
   app.enableCors({
-    origin: 'http://localhost:3001',
+    origin: [
+      'http://localhost:3001',
+      'https://www.2all.com.vn',
+      'http://13.214.73.95',
+    ],
     credentials: true,
   });
 
