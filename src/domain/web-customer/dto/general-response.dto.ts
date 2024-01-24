@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class GeneralResponse {
   constructor(statusCode: number, message: any) {
     this.statusCode = statusCode;
@@ -5,7 +7,10 @@ export class GeneralResponse {
     this.data = null;
   }
 
+  @ApiProperty()
   statusCode: number;
+  @ApiProperty()
   message: any;
+  @ApiProperty()
   data: any;
 }

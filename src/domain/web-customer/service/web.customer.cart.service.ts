@@ -9,6 +9,8 @@ import { UpdateCartAdvancedResponse } from '../dto/update-cart-advanced-response
 import { GetCartDetailResponse } from '../dto/get-cart-detail-response.dto';
 import { UpdateCartBasicRequest } from '../dto/update-cart-basic-request.dto';
 import { UpdateCartBasicResponse } from '../dto/update-cart-basic-response.dto';
+import { DeleteCartItemRequest } from '../dto/delete-cart-item-request.dto';
+import { DeleteCartItemResponse } from '../dto/delete-cart-item-response.dto';
 
 @Injectable()
 export class WebCustomerCartService {
@@ -53,6 +55,16 @@ export class WebCustomerCartService {
     if (this.flagService.isFeatureEnabled('fes-28-update-cart')) {
       return await lastValueFrom(
         this.restaurantClient.send({ cmd: 'update_cart_basic' }, requestData),
+      );
+    }
+  }
+
+  async deleteCartItems(
+    data: DeleteCartItemRequest,
+  ): Promise<DeleteCartItemResponse> {
+    if (this.flagService.isFeatureEnabled('fes-37-delete-some-of-cart-items')) {
+      return await lastValueFrom(
+        this.restaurantClient.send({ cmd: 'delete_cart_items' }, data),
       );
     }
   }
