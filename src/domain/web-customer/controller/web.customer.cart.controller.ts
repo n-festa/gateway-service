@@ -26,6 +26,7 @@ import { UpdateCartAdvancedResponse } from '../dto/update-cart-advanced-response
 import { GetCartDetailResponse } from '../dto/get-cart-detail-response.dto';
 import { UpdateCartBasicRequest } from '../dto/update-cart-basic-request.dto';
 import { UpdateCartBasicResponse } from '../dto/update-cart-basic-response.dto';
+import { GeneralResponse } from '../dto/general-response.dto';
 
 @ApiTags(' Cart')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -136,6 +137,36 @@ export class WebCustomerCartController {
         );
       }
       const serviceRes = await this.cartService.updateCartBasic(requestData);
+      if (serviceRes.statusCode >= 400) {
+        throw new HttpException(serviceRes, serviceRes.statusCode);
+      }
+
+      res.statusCode = serviceRes.statusCode;
+      res.message = serviceRes.message;
+      res.data = serviceRes.data;
+
+      return res;
+    }
+  }
+
+  @Post('delete-all/:customer_id')
+  @Roles(Role.Customer)
+  @HttpCode(200)
+  async deleteAllCartItem(
+    @User() user: GenericUser,
+    @Param('customer_id') customer_id: number,
+  ): Promise<GeneralResponse> {
+    if (this.flagsmithService.isFeatureEnabled('fes-36-delete-whole-cart')) {
+      const res = new GeneralResponse(200, '');
+
+      //Check if user is authorized to get cart info
+      if (user.userId !== customer_id) {
+        throw new UnauthorizedException(
+          "Cannot get other customer's cart info",
+        );
+      }
+
+      const serviceRes = await this.cartService.deleteAllCartItem(customer_id);
       if (serviceRes.statusCode >= 400) {
         throw new HttpException(serviceRes, serviceRes.statusCode);
       }
