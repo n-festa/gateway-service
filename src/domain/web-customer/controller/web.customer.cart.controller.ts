@@ -159,11 +159,9 @@ export class WebCustomerCartController {
     if (this.flagsmithService.isFeatureEnabled('fes-36-delete-whole-cart')) {
       const res = new GeneralResponse(200, '');
 
-      //Check if user is authorized to get cart info
+      //Check if user is authorized to delete cart
       if (user.userId !== customer_id) {
-        throw new UnauthorizedException(
-          "Cannot get other customer's cart info",
-        );
+        throw new UnauthorizedException("Cannot delete other customer's cart");
       }
 
       const serviceRes = await this.cartService.deleteAllCartItem(customer_id);
