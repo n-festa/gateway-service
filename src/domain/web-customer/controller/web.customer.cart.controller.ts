@@ -26,6 +26,8 @@ import { UpdateCartAdvancedResponse } from '../dto/update-cart-advanced-response
 import { GetCartDetailResponse } from '../dto/get-cart-detail-response.dto';
 import { UpdateCartBasicRequest } from '../dto/update-cart-basic-request.dto';
 import { UpdateCartBasicResponse } from '../dto/update-cart-basic-response.dto';
+import { DeleteCartItemRequest } from '../dto/delete-cart-item-request.dto';
+import { DeleteCartItemResponse } from '../dto/delete-cart-item-response.dto';
 import { GeneralResponse } from '../dto/general-response.dto';
 
 @ApiTags(' Cart')
@@ -137,6 +139,36 @@ export class WebCustomerCartController {
         );
       }
       const serviceRes = await this.cartService.updateCartBasic(requestData);
+      if (serviceRes.statusCode >= 400) {
+        throw new HttpException(serviceRes, serviceRes.statusCode);
+      }
+
+      res.statusCode = serviceRes.statusCode;
+      res.message = serviceRes.message;
+      res.data = serviceRes.data;
+
+      return res;
+    }
+  }
+
+  @Post('delelte-item')
+  @Roles(Role.Customer)
+  @HttpCode(200)
+  async deleteCartItems(
+    @User() user: GenericUser,
+    @Body() requestData: DeleteCartItemRequest,
+  ): Promise<DeleteCartItemResponse> {
+    if (
+      this.flagsmithService.isFeatureEnabled('fes-37-delete-some-of-cart-items')
+    ) {
+      const res = new DeleteCartItemResponse(200, '');
+
+      if (user.userId !== requestData.customer_id) {
+        throw new UnauthorizedException(
+          "Cannot delete item to other customer's cart",
+        );
+      }
+      const serviceRes = await this.cartService.deleteCartItems(requestData);
       if (serviceRes.statusCode >= 400) {
         throw new HttpException(serviceRes, serviceRes.statusCode);
       }
