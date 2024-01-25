@@ -22,12 +22,10 @@ export class WebCustomerCartService {
   ) {}
 
   async addCartItem(requestData: AddToCartRequest): Promise<AddToCartResponse> {
-    if (this.flagService.isFeatureEnabled('fes-24-add-to-cart')) {
-      return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'add_cart_item' }, requestData),
-      );
-    }
-  }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'add_cart_item' }, requestData),
+    );
+  } // end of addCartItem
 
   async getCartDetail(customer_id: number): Promise<GetCartDetailResponse> {
     if (this.flagService.isFeatureEnabled('fes-27-get-cart-info')) {
@@ -35,7 +33,7 @@ export class WebCustomerCartService {
         this.restaurantClient.send({ cmd: 'get_cart_detail' }, customer_id),
       );
     }
-  }
+  } // end of getCartDetail
 
   async updateCartAdvaced(
     requestData: UpdateCartAdvancedRequest,
@@ -48,7 +46,7 @@ export class WebCustomerCartService {
         ),
       );
     }
-  }
+  } // end of updateCartAdvaced
 
   async updateCartBasic(
     requestData: UpdateCartBasicRequest,
@@ -58,7 +56,7 @@ export class WebCustomerCartService {
         this.restaurantClient.send({ cmd: 'update_cart_basic' }, requestData),
       );
     }
-  }
+  } // end of updateCartBasic
 
   async deleteCartItems(
     data: DeleteCartItemRequest,
@@ -68,7 +66,7 @@ export class WebCustomerCartService {
         this.restaurantClient.send({ cmd: 'delete_cart_items' }, data),
       );
     }
-  }
+  } // end of deleteCartItems
 
   async deleteAllCartItem(customer_id: number): Promise<GeneralResponse> {
     if (this.flagService.isFeatureEnabled('fes-36-delete-whole-cart')) {
@@ -79,5 +77,5 @@ export class WebCustomerCartService {
         ),
       );
     }
-  }
+  } // end of deleteAllCartItem
 }

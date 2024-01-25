@@ -47,25 +47,23 @@ export class WebCustomerCartController {
     @Body() requestData: AddToCartRequest,
     @User() user: GenericUser,
   ): Promise<AddToCartResponse> {
-    if (this.flagsmithService.isFeatureEnabled('fes-24-add-to-cart')) {
-      const res = new AddToCartResponse(200, '');
-      if (user.userId !== requestData.customer_id) {
-        throw new UnauthorizedException(
-          "Cannot add item to other customer's cart",
-        );
-      }
-      const serviceRes = await this.cartService.addCartItem(requestData);
-      res.statusCode = serviceRes.statusCode;
-      res.message = serviceRes.message;
-      res.data = serviceRes.data;
-
-      if (res.statusCode >= 400) {
-        throw new HttpException(res, res.statusCode);
-      }
-
-      return res;
+    const res = new AddToCartResponse(200, '');
+    if (user.userId !== requestData.customer_id) {
+      throw new UnauthorizedException(
+        "Cannot add item to other customer's cart",
+      );
     }
-  }
+    const serviceRes = await this.cartService.addCartItem(requestData);
+    res.statusCode = serviceRes.statusCode;
+    res.message = serviceRes.message;
+    res.data = serviceRes.data;
+
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
+    }
+
+    return res;
+  } // end of addCartItem
 
   @Get('get-detail/:customer_id')
   @Roles(Role.Customer)
@@ -93,7 +91,7 @@ export class WebCustomerCartController {
 
       return res;
     }
-  }
+  } // end of getCartDetail
 
   @Post('advanced-update')
   @Roles(Role.Customer)
@@ -121,7 +119,7 @@ export class WebCustomerCartController {
 
       return res;
     }
-  }
+  } // end of updateCartAdvaced
 
   @Post('basic-update')
   @Roles(Role.Customer)
@@ -149,7 +147,7 @@ export class WebCustomerCartController {
 
       return res;
     }
-  }
+  } // end of updateCartBasic
 
   @Post('delelte-item')
   @Roles(Role.Customer)
@@ -179,7 +177,7 @@ export class WebCustomerCartController {
 
       return res;
     }
-  }
+  } // end of deleteCartItems
 
   @Post('delete-all/:customer_id')
   @Roles(Role.Customer)
@@ -207,5 +205,5 @@ export class WebCustomerCartController {
 
       return res;
     }
-  }
+  } // end of deleteAllCartItem
 }
