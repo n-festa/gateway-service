@@ -178,24 +178,22 @@ export class WebCustomerCartController {
     @User() user: GenericUser,
     @Param('customer_id') customer_id: number,
   ): Promise<GeneralResponse> {
-    if (this.flagsmithService.isFeatureEnabled('fes-36-delete-whole-cart')) {
-      const res = new GeneralResponse(200, '');
+    const res = new GeneralResponse(200, '');
 
-      //Check if user is authorized to delete cart
-      if (user.userId !== customer_id) {
-        throw new UnauthorizedException("Cannot delete other customer's cart");
-      }
-
-      const serviceRes = await this.cartService.deleteAllCartItem(customer_id);
-      if (serviceRes.statusCode >= 400) {
-        throw new HttpException(serviceRes, serviceRes.statusCode);
-      }
-
-      res.statusCode = serviceRes.statusCode;
-      res.message = serviceRes.message;
-      res.data = serviceRes.data;
-
-      return res;
+    //Check if user is authorized to delete cart
+    if (user.userId !== customer_id) {
+      throw new UnauthorizedException("Cannot delete other customer's cart");
     }
+
+    const serviceRes = await this.cartService.deleteAllCartItem(customer_id);
+    if (serviceRes.statusCode >= 400) {
+      throw new HttpException(serviceRes, serviceRes.statusCode);
+    }
+
+    res.statusCode = serviceRes.statusCode;
+    res.message = serviceRes.message;
+    res.data = serviceRes.data;
+
+    return res;
   } // end of deleteAllCartItem
 }
