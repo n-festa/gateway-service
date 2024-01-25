@@ -11,6 +11,7 @@ import { UpdateCartBasicRequest } from '../dto/update-cart-basic-request.dto';
 import { UpdateCartBasicResponse } from '../dto/update-cart-basic-response.dto';
 import { DeleteCartItemRequest } from '../dto/delete-cart-item-request.dto';
 import { DeleteCartItemResponse } from '../dto/delete-cart-item-response.dto';
+import { GeneralResponse } from '../dto/general-response.dto';
 
 @Injectable()
 export class WebCustomerCartService {
@@ -65,6 +66,17 @@ export class WebCustomerCartService {
     if (this.flagService.isFeatureEnabled('fes-37-delete-some-of-cart-items')) {
       return await lastValueFrom(
         this.restaurantClient.send({ cmd: 'delete_cart_items' }, data),
+      );
+    }
+  }
+
+  async deleteAllCartItem(customer_id: number): Promise<GeneralResponse> {
+    if (this.flagService.isFeatureEnabled('fes-36-delete-whole-cart')) {
+      return await lastValueFrom(
+        this.restaurantClient.send(
+          { cmd: 'delete_all_cart_item' },
+          customer_id,
+        ),
       );
     }
   }
