@@ -71,26 +71,22 @@ export class WebCustomerCartController {
     @User() user: GenericUser,
     @Param('customer_id') customer_id: number,
   ): Promise<GetCartDetailResponse> {
-    if (this.flagsmithService.isFeatureEnabled('fes-27-get-cart-info')) {
-      const res = new GetCartDetailResponse(200, '');
-      //Check if user is authorized to get cart info
-      if (user.userId !== customer_id) {
-        throw new UnauthorizedException(
-          "Cannot get other customer's cart info",
-        );
-      }
-      const serviceRes = await this.cartService.getCartDetail(customer_id);
-
-      if (serviceRes.statusCode >= 400) {
-        throw new HttpException(serviceRes, serviceRes.statusCode);
-      }
-
-      res.statusCode = serviceRes.statusCode;
-      res.message = serviceRes.message;
-      res.data = serviceRes.data;
-
-      return res;
+    const res = new GetCartDetailResponse(200, '');
+    //Check if user is authorized to get cart info
+    if (user.userId !== customer_id) {
+      throw new UnauthorizedException("Cannot get other customer's cart info");
     }
+    const serviceRes = await this.cartService.getCartDetail(customer_id);
+
+    if (serviceRes.statusCode >= 400) {
+      throw new HttpException(serviceRes, serviceRes.statusCode);
+    }
+
+    res.statusCode = serviceRes.statusCode;
+    res.message = serviceRes.message;
+    res.data = serviceRes.data;
+
+    return res;
   } // end of getCartDetail
 
   @Post('advanced-update')

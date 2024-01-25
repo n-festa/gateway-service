@@ -28,11 +28,9 @@ export class WebCustomerCartService {
   } // end of addCartItem
 
   async getCartDetail(customer_id: number): Promise<GetCartDetailResponse> {
-    if (this.flagService.isFeatureEnabled('fes-27-get-cart-info')) {
-      return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'get_cart_detail' }, customer_id),
-      );
-    }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'get_cart_detail' }, customer_id),
+    );
   } // end of getCartDetail
 
   async updateCartAdvaced(
