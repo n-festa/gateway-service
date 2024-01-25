@@ -52,11 +52,9 @@ export class WebCustomerCartService {
   async deleteCartItems(
     data: DeleteCartItemRequest,
   ): Promise<DeleteCartItemResponse> {
-    if (this.flagService.isFeatureEnabled('fes-37-delete-some-of-cart-items')) {
-      return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'delete_cart_items' }, data),
-      );
-    }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'delete_cart_items' }, data),
+    );
   } // end of deleteCartItems
 
   async deleteAllCartItem(customer_id: number): Promise<GeneralResponse> {
