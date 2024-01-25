@@ -96,25 +96,23 @@ export class WebCustomerCartController {
     @User() user: GenericUser,
     @Body() requestData: UpdateCartAdvancedRequest,
   ): Promise<UpdateCartAdvancedResponse> {
-    if (this.flagsmithService.isFeatureEnabled('fes-28-update-cart')) {
-      const res = new UpdateCartAdvancedResponse(200, '');
+    const res = new UpdateCartAdvancedResponse(200, '');
 
-      if (user.userId !== requestData.customer_id) {
-        throw new UnauthorizedException(
-          "Cannot update item to other customer's cart",
-        );
-      }
-      const serviceRes = await this.cartService.updateCartAdvaced(requestData);
-      if (serviceRes.statusCode >= 400) {
-        throw new HttpException(serviceRes, serviceRes.statusCode);
-      }
-
-      res.statusCode = serviceRes.statusCode;
-      res.message = serviceRes.message;
-      res.data = serviceRes.data;
-
-      return res;
+    if (user.userId !== requestData.customer_id) {
+      throw new UnauthorizedException(
+        "Cannot update item to other customer's cart",
+      );
     }
+    const serviceRes = await this.cartService.updateCartAdvaced(requestData);
+    if (serviceRes.statusCode >= 400) {
+      throw new HttpException(serviceRes, serviceRes.statusCode);
+    }
+
+    res.statusCode = serviceRes.statusCode;
+    res.message = serviceRes.message;
+    res.data = serviceRes.data;
+
+    return res;
   } // end of updateCartAdvaced
 
   @Post('basic-update')
@@ -124,25 +122,23 @@ export class WebCustomerCartController {
     @User() user: GenericUser,
     @Body() requestData: UpdateCartBasicRequest,
   ): Promise<UpdateCartBasicResponse> {
-    if (this.flagsmithService.isFeatureEnabled('fes-28-update-cart')) {
-      const res = new UpdateCartBasicResponse(200, '');
+    const res = new UpdateCartBasicResponse(200, '');
 
-      if (user.userId !== requestData.customer_id) {
-        throw new UnauthorizedException(
-          "Cannot update item to other customer's cart",
-        );
-      }
-      const serviceRes = await this.cartService.updateCartBasic(requestData);
-      if (serviceRes.statusCode >= 400) {
-        throw new HttpException(serviceRes, serviceRes.statusCode);
-      }
-
-      res.statusCode = serviceRes.statusCode;
-      res.message = serviceRes.message;
-      res.data = serviceRes.data;
-
-      return res;
+    if (user.userId !== requestData.customer_id) {
+      throw new UnauthorizedException(
+        "Cannot update item to other customer's cart",
+      );
     }
+    const serviceRes = await this.cartService.updateCartBasic(requestData);
+    if (serviceRes.statusCode >= 400) {
+      throw new HttpException(serviceRes, serviceRes.statusCode);
+    }
+
+    res.statusCode = serviceRes.statusCode;
+    res.message = serviceRes.message;
+    res.data = serviceRes.data;
+
+    return res;
   } // end of updateCartBasic
 
   @Post('delelte-item')

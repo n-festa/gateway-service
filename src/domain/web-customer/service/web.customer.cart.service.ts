@@ -36,24 +36,17 @@ export class WebCustomerCartService {
   async updateCartAdvaced(
     requestData: UpdateCartAdvancedRequest,
   ): Promise<UpdateCartAdvancedResponse> {
-    if (this.flagService.isFeatureEnabled('fes-28-update-cart')) {
-      return await lastValueFrom(
-        this.restaurantClient.send(
-          { cmd: 'update_cart_advanced' },
-          requestData,
-        ),
-      );
-    }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'update_cart_advanced' }, requestData),
+    );
   } // end of updateCartAdvaced
 
   async updateCartBasic(
     requestData: UpdateCartBasicRequest,
   ): Promise<UpdateCartBasicResponse> {
-    if (this.flagService.isFeatureEnabled('fes-28-update-cart')) {
-      return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'update_cart_basic' }, requestData),
-      );
-    }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'update_cart_basic' }, requestData),
+    );
   } // end of updateCartBasic
 
   async deleteCartItems(
