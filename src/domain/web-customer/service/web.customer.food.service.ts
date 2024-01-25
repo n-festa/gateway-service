@@ -20,36 +20,34 @@ export class WebCustomerFoodService {
         data,
       ),
     );
-  }
+  } // end of getGeneralFoodRecomendation
 
   async searchByName(data: SearchFoodByNameRequest): Promise<any> {
     return await lastValueFrom(
       this.restaurantClient.send({ cmd: 'search_food_by_name' }, data),
     );
-  }
+  } // end of searchByName
 
   async getFoodDetailById(id: number): Promise<any> {
     return await lastValueFrom(
       this.restaurantClient.send({ cmd: 'get_food_detail_by_id' }, id),
     );
-  }
+  } // end of getFoodDetailById
 
   async getListOfSkuById(id: number): Promise<any> {
     return await lastValueFrom(
       this.restaurantClient.send({ cmd: 'get_list_of_sku_by_id' }, id),
     );
-  }
+  } // end of getListOfSkuById
 
   async getSideDishByMenuItemId(
     data: GetSideDishRequest,
   ): Promise<GetSideDishResonse> {
-    if (this.flagService.isFeatureEnabled('fes-23-get-side-dishes')) {
-      return await lastValueFrom(
-        this.restaurantClient.send(
-          { cmd: 'get_side_dish_by_menu_item_id' },
-          data,
-        ),
-      );
-    }
-  }
+    return await lastValueFrom(
+      this.restaurantClient.send(
+        { cmd: 'get_side_dish_by_menu_item_id' },
+        data,
+      ),
+    );
+  } // end of getSideDishByMenuItemId
 }

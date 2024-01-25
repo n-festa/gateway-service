@@ -22,62 +22,44 @@ export class WebCustomerCartService {
   ) {}
 
   async addCartItem(requestData: AddToCartRequest): Promise<AddToCartResponse> {
-    if (this.flagService.isFeatureEnabled('fes-24-add-to-cart')) {
-      return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'add_cart_item' }, requestData),
-      );
-    }
-  }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'add_cart_item' }, requestData),
+    );
+  } // end of addCartItem
 
   async getCartDetail(customer_id: number): Promise<GetCartDetailResponse> {
-    if (this.flagService.isFeatureEnabled('fes-27-get-cart-info')) {
-      return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'get_cart_detail' }, customer_id),
-      );
-    }
-  }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'get_cart_detail' }, customer_id),
+    );
+  } // end of getCartDetail
 
   async updateCartAdvaced(
     requestData: UpdateCartAdvancedRequest,
   ): Promise<UpdateCartAdvancedResponse> {
-    if (this.flagService.isFeatureEnabled('fes-28-update-cart')) {
-      return await lastValueFrom(
-        this.restaurantClient.send(
-          { cmd: 'update_cart_advanced' },
-          requestData,
-        ),
-      );
-    }
-  }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'update_cart_advanced' }, requestData),
+    );
+  } // end of updateCartAdvaced
 
   async updateCartBasic(
     requestData: UpdateCartBasicRequest,
   ): Promise<UpdateCartBasicResponse> {
-    if (this.flagService.isFeatureEnabled('fes-28-update-cart')) {
-      return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'update_cart_basic' }, requestData),
-      );
-    }
-  }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'update_cart_basic' }, requestData),
+    );
+  } // end of updateCartBasic
 
   async deleteCartItems(
     data: DeleteCartItemRequest,
   ): Promise<DeleteCartItemResponse> {
-    if (this.flagService.isFeatureEnabled('fes-37-delete-some-of-cart-items')) {
-      return await lastValueFrom(
-        this.restaurantClient.send({ cmd: 'delete_cart_items' }, data),
-      );
-    }
-  }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'delete_cart_items' }, data),
+    );
+  } // end of deleteCartItems
 
   async deleteAllCartItem(customer_id: number): Promise<GeneralResponse> {
-    if (this.flagService.isFeatureEnabled('fes-36-delete-whole-cart')) {
-      return await lastValueFrom(
-        this.restaurantClient.send(
-          { cmd: 'delete_all_cart_item' },
-          customer_id,
-        ),
-      );
-    }
-  }
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'delete_all_cart_item' }, customer_id),
+    );
+  } // end of deleteAllCartItem
 }
