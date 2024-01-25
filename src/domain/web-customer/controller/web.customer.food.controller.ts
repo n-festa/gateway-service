@@ -41,7 +41,7 @@ export class WebCustomerFoodController {
       throw new HttpException(res, res.statusCode);
     }
     return res;
-  }
+  } // end of getGeneralFoodRecomendation
 
   // @Get('search-by-name')
   @Post('search-by-name')
@@ -54,7 +54,7 @@ export class WebCustomerFoodController {
       throw new HttpException(res, res.statusCode);
     }
     return res;
-  }
+  } // end of searchByName
 
   @Get('get-detail/:id')
   async getFoodDetailById(@Param('id') id: number) {
@@ -63,7 +63,7 @@ export class WebCustomerFoodController {
       throw new HttpException(res, res.statusCode);
     }
     return res;
-  }
+  } // end of getFoodDetailById
 
   @Get('get-sku-list/:id')
   async getListOfSkuById(@Param('id') id: number) {
@@ -72,22 +72,20 @@ export class WebCustomerFoodController {
       throw new HttpException(res, res.statusCode);
     }
     return res;
-  }
+  } // end of getListOfSkuById
 
   @Get('get-side-dish/:id')
   async getSideDishByMenuItemId(
     @Param('id') id: number,
   ): Promise<GetSideDishResonse> {
-    if (this.flagService.isFeatureEnabled('fes-23-get-side-dishes')) {
-      const inputData: GetSideDishRequest = {
-        menu_item_id: id,
-        timestamp: Date.now(),
-      };
-      const res = await this.foodService.getSideDishByMenuItemId(inputData);
-      if (res.statusCode >= 400) {
-        throw new HttpException(res, res.statusCode);
-      }
-      return res;
+    const inputData: GetSideDishRequest = {
+      menu_item_id: id,
+      timestamp: Date.now(),
+    };
+    const res = await this.foodService.getSideDishByMenuItemId(inputData);
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
     }
-  }
+    return res;
+  } // end of getSideDishByMenuItemId
 }
