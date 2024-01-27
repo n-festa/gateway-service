@@ -16,6 +16,8 @@ import { FlagsmitService } from 'src/dependency/flagsmith/flagsmith.service';
 import { SearchFoodByNameRequest } from '../dto/search-food-by-name-request.dto';
 import { GetSideDishResonse } from '../dto/get-side-dish-response.dto';
 import { GetSideDishRequest } from '../dto/get-side-dish-request.dto';
+import { FetchMode } from 'src/enum';
+import { FoodRecommendationResponse } from '../dto/food-recommendation-response.dto';
 @ApiTags('Web customer food')
 @Controller('web-customer/food')
 export class WebCustomerFoodController {
@@ -29,10 +31,12 @@ export class WebCustomerFoodController {
     // @Body() foodRequest: FoodRecommendationRequest,
     @Query('lat') lat: number,
     @Query('long') long: number,
-  ): Promise<any> {
+    @Query('fetch_mode') fetch_mode: FetchMode = FetchMode.Some,
+  ): Promise<FoodRecommendationResponse> {
     const FoodRecommendationRequest: FoodRecommendationRequest = {
       lat: lat,
       long: long,
+      fetch_mode: fetch_mode,
     };
     const res = await this.foodService.getGeneralFoodRecomendation(
       FoodRecommendationRequest,

@@ -6,6 +6,7 @@ import { FlagsmitService } from 'src/dependency/flagsmith/flagsmith.service';
 import { SearchFoodByNameRequest } from '../dto/search-food-by-name-request.dto';
 import { GetSideDishRequest } from '../dto/get-side-dish-request.dto';
 import { GetSideDishResonse } from '../dto/get-side-dish-response.dto';
+import { FoodRecommendationResponse } from '../dto/food-recommendation-response.dto';
 
 @Injectable()
 export class WebCustomerFoodService {
@@ -13,7 +14,7 @@ export class WebCustomerFoodService {
   @Inject('FLAGSMITH_SERVICE') private readonly flagService: FlagsmitService;
   async getGeneralFoodRecomendation(
     data: FoodRecommendationRequest,
-  ): Promise<any> {
+  ): Promise<FoodRecommendationResponse> {
     return await firstValueFrom(
       this.restaurantClient.send(
         { cmd: 'get_general_food_recomendation' },

@@ -10,3 +10,8 @@ export enum PhysicalActivityLevel {
   Moderate = 'Moderate',
   Vigorous = 'Vigorous',
 }
+
+export enum FetchMode {
+  Some = 'some',
+  Full = 'full',
+}

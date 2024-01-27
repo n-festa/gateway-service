@@ -5,6 +5,7 @@ import { RestaurantRecommendationRequest } from '../dto/restaurant-recommendatio
 import { FlagsmitService } from 'src/dependency/flagsmith/flagsmith.service';
 import { GetRestaurantDetailResponse } from '../dto/get-restaurant-detail-response.dto';
 import { GetRestaurantDetailRequest } from '../dto/get-restaurant-detail-request.dto';
+import { RestaurantRecommendationResponse } from '../dto/restaurant-recommendation-response.dto';
 
 @Injectable()
 export class WebCustomerRestaurantService {
@@ -16,7 +17,7 @@ export class WebCustomerRestaurantService {
 
   async getGeneralRestaurantRecomendation(
     data: RestaurantRecommendationRequest,
-  ): Promise<any> {
+  ): Promise<RestaurantRecommendationResponse> {
     return await firstValueFrom(
       this.restaurantClient.send(
         { cmd: 'get_general_restaurant_recomendation' },
