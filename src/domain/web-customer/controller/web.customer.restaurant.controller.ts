@@ -13,6 +13,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { FlagsmitService } from 'src/dependency/flagsmith/flagsmith.service';
 import { GetRestaurantDetailResponse } from '../dto/get-restaurant-detail-response.dto';
 import { GetRestaurantDetailRequest } from '../dto/get-restaurant-detail-request.dto';
+import { FetchMode } from 'src/enum';
+import { RestaurantRecommendationResponse } from '../dto/restaurant-recommendation-response.dto';
 
 @ApiTags('Web customer restaurant')
 @Controller('web-customer/restaurant')
@@ -27,10 +29,12 @@ export class WebCustomerRestaurantController {
     // @Body() requestData: RestaurantRecommendationRequest,
     @Query('lat') lat: number,
     @Query('long') long: number,
-  ): Promise<any> {
+    @Query('fetch_mode') fetch_mode: FetchMode = FetchMode.Some,
+  ): Promise<RestaurantRecommendationResponse> {
     const data: RestaurantRecommendationRequest = {
       lat: lat,
       long: long,
+      fetch_mode: fetch_mode,
     };
     const res =
       await this.restaurantService.getGeneralRestaurantRecomendation(data);
