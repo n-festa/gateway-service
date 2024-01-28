@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GeneralResponse } from './general-response.dto';
+import { TextByLang } from '../type';
 
 export class DeleteCartItemResponse extends GeneralResponse {
   @ApiProperty()
@@ -7,6 +8,9 @@ export class DeleteCartItemResponse extends GeneralResponse {
 }
 interface Data {
   customer_id: number;
+  restaurant_id: number;
+  restaurant_name: TextByLang[];
+  restaurant_logo_img: string;
   cart_info: CartItem[];
 }
 
