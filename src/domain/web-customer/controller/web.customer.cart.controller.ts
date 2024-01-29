@@ -29,6 +29,8 @@ import { UpdateCartBasicResponse } from '../dto/update-cart-basic-response.dto';
 import { DeleteCartItemRequest } from '../dto/delete-cart-item-request.dto';
 import { DeleteCartItemResponse } from '../dto/delete-cart-item-response.dto';
 import { GeneralResponse } from '../dto/general-response.dto';
+import { GetAvailableDeliveryTimeRequest } from '../dto/get-available-delivery-time-request.dto';
+import { GetAvailableDeliveryTimeResponse } from '../dto/get-available-delivery-time-response.dto';
 
 @ApiTags(' Cart')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -192,4 +194,23 @@ export class WebCustomerCartController {
 
     return res;
   } // end of deleteAllCartItem
+
+  @Post('get-available-delivery-time')
+  @Roles(Role.Customer)
+  @HttpCode(200)
+  async getAvailableDeliveryTime(
+    @Body() data: GetAvailableDeliveryTimeRequest,
+  ): Promise<GetAvailableDeliveryTimeResponse> {
+    const res = new GetAvailableDeliveryTimeResponse(200, '');
+    const serviceRes = await this.cartService.getAvailableDeliveryTime(data);
+    if (serviceRes.statusCode >= 400) {
+      throw new HttpException(serviceRes, serviceRes.statusCode);
+    }
+
+    res.statusCode = serviceRes.statusCode;
+    res.message = serviceRes.message;
+    res.data = serviceRes.data;
+
+    return res;
+  } // end of getAvailableDeliveryTime
 }
