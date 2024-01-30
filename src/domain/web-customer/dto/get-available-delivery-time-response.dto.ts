@@ -6,7 +6,7 @@ export class GetAvailableDeliveryTimeResponse extends GeneralResponse {
 interface TimeSlot {
   dayId: number; // 1->7: Sunday -> Saturday
   dayName: string; //sun,mon,tue,wed,thu,fri,sat
-  date: Date;
-  hour: string;
+  date: string;
+  hours: string;
   minutes: string;
 }
