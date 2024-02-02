@@ -30,6 +30,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3001',
       'https://www.2all.com.vn',
+      'https://2all.com.vn',
       'http://13.214.73.95',
     ],
     credentials: true,
