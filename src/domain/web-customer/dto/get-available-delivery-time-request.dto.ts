@@ -9,4 +9,6 @@ export class GetAvailableDeliveryTimeRequest {
   long: number;
   @ApiProperty()
   lat: number;
+  @ApiProperty()
+  utc_offset: number;
 }

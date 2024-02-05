@@ -9,4 +9,5 @@ interface TimeSlot {
   date: string;
   hours: string;
   minutes: string;
+  utc_offset: number;
 }
