@@ -12,6 +12,8 @@ import { UpdateCartBasicResponse } from '../dto/update-cart-basic-response.dto';
 import { DeleteCartItemRequest } from '../dto/delete-cart-item-request.dto';
 import { DeleteCartItemResponse } from '../dto/delete-cart-item-response.dto';
 import { GeneralResponse } from '../dto/general-response.dto';
+import { GetAvailableDeliveryTimeRequest } from '../dto/get-available-delivery-time-request.dto';
+import { GetAvailableDeliveryTimeResponse } from '../dto/get-available-delivery-time-response.dto';
 
 @Injectable()
 export class WebCustomerCartService {
@@ -62,4 +64,12 @@ export class WebCustomerCartService {
       this.restaurantClient.send({ cmd: 'delete_all_cart_item' }, customer_id),
     );
   } // end of deleteAllCartItem
+
+  async getAvailableDeliveryTime(
+    data: GetAvailableDeliveryTimeRequest,
+  ): Promise<GetAvailableDeliveryTimeResponse> {
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'get_available_delivery_time' }, data),
+    );
+  } // end of getAvailableDeliveryTime
 }

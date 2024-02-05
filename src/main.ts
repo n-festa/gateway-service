@@ -38,5 +38,9 @@ async function bootstrap() {
 
   console.log(`---- APP PORT ${configService.get<number>('appPort')}`);
   await app.listen(configService.get<number>('appPort') || DEFAULT_PORT);
+
+  //Set timezone
+  process.env.TZ = 'UTC';
+  console.log(`The default timezone at ${process.env.TZ}`);
 }
 bootstrap();
