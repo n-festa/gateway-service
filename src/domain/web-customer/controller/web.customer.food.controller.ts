@@ -18,6 +18,7 @@ import { GetSideDishResonse } from '../dto/get-side-dish-response.dto';
 import { GetSideDishRequest } from '../dto/get-side-dish-request.dto';
 import { FetchMode } from 'src/enum';
 import { FoodRecommendationResponse } from '../dto/food-recommendation-response.dto';
+import { GetFoodDetailResponse } from '../dto/get-food-detail-response.dto';
 @ApiTags('Web customer food')
 @Controller('web-customer/food')
 export class WebCustomerFoodController {
@@ -61,7 +62,9 @@ export class WebCustomerFoodController {
   } // end of searchByName
 
   @Get('get-detail/:id')
-  async getFoodDetailById(@Param('id') id: number) {
+  async getFoodDetailById(
+    @Param('id') id: number,
+  ): Promise<GetFoodDetailResponse> {
     const res = await this.foodService.getFoodDetailById(id);
     if (res.statusCode >= 400) {
       throw new HttpException(res, res.statusCode);
