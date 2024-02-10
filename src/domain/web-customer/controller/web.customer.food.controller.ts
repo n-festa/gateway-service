@@ -19,6 +19,7 @@ import { GetSideDishRequest } from '../dto/get-side-dish-request.dto';
 import { FetchMode } from 'src/enum';
 import { FoodRecommendationResponse } from '../dto/food-recommendation-response.dto';
 import { GetFoodDetailResponse } from '../dto/get-food-detail-response.dto';
+import { GetHotFoodResponse } from '../dto/get-hot-food-response.dto';
 @ApiTags('Web customer food')
 @Controller('web-customer/food')
 export class WebCustomerFoodController {
@@ -95,4 +96,18 @@ export class WebCustomerFoodController {
     }
     return res;
   } // end of getSideDishByMenuItemId
+
+  @Get('get-hot-food')
+  async getHotFood(): Promise<GetHotFoodResponse> {
+    const res = new GetHotFoodResponse(200, '');
+    const serviceRes = await this.foodService.getHotFood();
+    if (serviceRes.statusCode >= 400) {
+      throw new HttpException(serviceRes, serviceRes.statusCode);
+    }
+
+    res.statusCode = serviceRes.statusCode;
+    res.message = serviceRes.message;
+    res.data = serviceRes.data;
+    return res;
+  } // end of getHotFood
 }
