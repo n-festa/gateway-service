@@ -15,6 +15,8 @@ import { WebCustomerCategoryController } from './controller/web.customer.categor
 import { WebCustomerCategoryService } from './service/web.customer.category.service';
 import { WebCustomerCartController } from './controller/web.customer.cart.controller';
 import { WebCustomerCartService } from './service/web.customer.cart.service';
+import { WebCustomerRatingAndReviewController } from './controller/web.customer.rating&review.controller';
+import { WebCustomerRatingAndReviewService } from './service/web.customer.rating&review.service';
 
 @Module({
   imports: [PassportModule.register({}), JwtModule.register({})],
@@ -25,6 +27,7 @@ import { WebCustomerCartService } from './service/web.customer.cart.service';
     WebCustomerRestaurantController,
     WebCustomerCategoryController,
     WebCustomerCartController,
+    WebCustomerRatingAndReviewController,
   ],
   providers: [
     WebCustomerAuthService,
@@ -35,6 +38,7 @@ import { WebCustomerCartService } from './service/web.customer.cart.service';
     WebCustomerRestaurantService,
     WebCustomerCategoryService,
     WebCustomerCartService,
+    WebCustomerRatingAndReviewService,
   ],
   exports: [
     WebCustomerAuthService,
@@ -43,6 +47,7 @@ import { WebCustomerCartService } from './service/web.customer.cart.service';
     WebCustomerRestaurantService,
     WebCustomerCategoryService,
     WebCustomerCartService,
+    WebCustomerRatingAndReviewService,
   ],
 })
 export class WebCustomerModule {}
