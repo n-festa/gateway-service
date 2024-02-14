@@ -14,6 +14,8 @@ import { DeleteCartItemResponse } from '../dto/delete-cart-item-response.dto';
 import { GeneralResponse } from '../dto/general-response.dto';
 import { GetAvailableDeliveryTimeRequest } from '../dto/get-available-delivery-time-request.dto';
 import { GetAvailableDeliveryTimeResponse } from '../dto/get-available-delivery-time-response.dto';
+import { QuickAddToCartRequest } from '../dto/quick-add-to-cart-request.dto';
+import { QuickAddToCartResponse } from '../dto/quick-add-to-cart-response.dto';
 
 @Injectable()
 export class WebCustomerCartService {
@@ -72,4 +74,12 @@ export class WebCustomerCartService {
       this.restaurantClient.send({ cmd: 'get_available_delivery_time' }, data),
     );
   } // end of getAvailableDeliveryTime
+
+  async quickAddToCart(
+    data: QuickAddToCartRequest,
+  ): Promise<QuickAddToCartResponse> {
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'quick_add_to_cart' }, data),
+    );
+  } // end of quickAddToCart
 }
