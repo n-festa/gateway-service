@@ -31,6 +31,8 @@ import { DeleteCartItemResponse } from '../dto/delete-cart-item-response.dto';
 import { GeneralResponse } from '../dto/general-response.dto';
 import { GetAvailableDeliveryTimeRequest } from '../dto/get-available-delivery-time-request.dto';
 import { GetAvailableDeliveryTimeResponse } from '../dto/get-available-delivery-time-response.dto';
+import { QuickAddToCartRequest } from '../dto/quick-add-to-cart-request.dto';
+import { QuickAddToCartResponse } from '../dto/quick-add-to-cart-response.dto';
 
 @ApiTags(' Cart')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -213,4 +215,29 @@ export class WebCustomerCartController {
 
     return res;
   } // end of getAvailableDeliveryTime
+
+  @Post('quick-add')
+  @Roles(Role.Customer)
+  @HttpCode(200)
+  async quickAddToCart(
+    @Body() requestData: QuickAddToCartRequest,
+    @User() user: GenericUser,
+  ): Promise<QuickAddToCartResponse> {
+    const res = new QuickAddToCartResponse(200, '');
+    if (user.userId !== requestData.customer_id) {
+      throw new UnauthorizedException(
+        "Cannot add item to other customer's cart",
+      );
+    }
+    const serviceRes = await this.cartService.quickAddToCart(requestData);
+    res.statusCode = serviceRes.statusCode;
+    res.message = serviceRes.message;
+    res.data = serviceRes.data;
+
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
+    }
+
+    return res;
+  } // end of quickAddToCart
 }
