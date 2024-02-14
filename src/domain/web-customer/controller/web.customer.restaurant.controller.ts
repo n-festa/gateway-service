@@ -5,6 +5,7 @@ import {
   HttpException,
   Inject,
   Param,
+  Post,
   Query,
 } from '@nestjs/common';
 import { WebCustomerRestaurantService } from '../service/web.customer.restaurant.service';
@@ -15,6 +16,8 @@ import { GetRestaurantDetailResponse } from '../dto/get-restaurant-detail-respon
 import { GetRestaurantDetailRequest } from '../dto/get-restaurant-detail-request.dto';
 import { FetchMode } from 'src/enum';
 import { RestaurantRecommendationResponse } from '../dto/restaurant-recommendation-response.dto';
+import { SendContactFormRequest } from '../dto/send-contact-form-request.dto';
+import { SendContactFormResponse } from '../dto/send-contact-form-response.dto';
 
 @ApiTags('Web customer restaurant')
 @Controller('web-customer/restaurant')
@@ -66,4 +69,19 @@ export class WebCustomerRestaurantController {
     res.data = serviceRes.data;
     return res;
   } // end of getRestaurantDetails
+
+  @Post('send-contact-form')
+  async sendContactForm(
+    @Body() data: SendContactFormRequest,
+  ): Promise<SendContactFormResponse> {
+    const res = new SendContactFormResponse(200, '');
+    const serviceRes = await this.restaurantService.sendContactForm(data);
+    if (serviceRes.statusCode >= 400) {
+      throw new HttpException(serviceRes, serviceRes.statusCode);
+    }
+    res.statusCode = serviceRes.statusCode;
+    res.message = serviceRes.message;
+    res.data = serviceRes.data;
+    return res;
+  } //end of sendContactForm
 }
