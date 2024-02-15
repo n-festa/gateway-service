@@ -9,6 +9,8 @@ import { GetSideDishResonse } from '../dto/get-side-dish-response.dto';
 import { FoodRecommendationResponse } from '../dto/food-recommendation-response.dto';
 import { GetFoodDetailResponse } from '../dto/get-food-detail-response.dto';
 import { GetHotFoodResponse } from '../dto/get-hot-food-response.dto';
+import { GetAvailableFoodByRestaurantResponse } from '../dto/get-available-food-by-restaurant-response.dto';
+import { GetAvailableFoodByRestaurantRequest } from '../dto/get-available-food-by-restaurant-request.dto';
 
 @Injectable()
 export class WebCustomerFoodService {
@@ -59,4 +61,15 @@ export class WebCustomerFoodService {
       this.restaurantClient.send({ cmd: 'get_hot_food' }, {}),
     );
   } // end of getHotFood
+
+  async getAvailableFoodByRestaurant(
+    data: GetAvailableFoodByRestaurantRequest,
+  ): Promise<GetAvailableFoodByRestaurantResponse> {
+    return await lastValueFrom(
+      this.restaurantClient.send(
+        { cmd: 'get_available_food_by_restaurant' },
+        data,
+      ),
+    );
+  } // end of getAvailableFoodByRestaurant
 }
