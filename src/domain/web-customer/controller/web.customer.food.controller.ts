@@ -20,6 +20,8 @@ import { FetchMode } from 'src/enum';
 import { FoodRecommendationResponse } from '../dto/food-recommendation-response.dto';
 import { GetFoodDetailResponse } from '../dto/get-food-detail-response.dto';
 import { GetHotFoodResponse } from '../dto/get-hot-food-response.dto';
+import { GetAvailableFoodByRestaurantResponse } from '../dto/get-available-food-by-restaurant-response.dto';
+import { GetAvailableFoodByRestaurantRequest } from '../dto/get-available-food-by-restaurant-request.dto';
 @ApiTags('Web customer food')
 @Controller('web-customer/food')
 export class WebCustomerFoodController {
@@ -110,4 +112,22 @@ export class WebCustomerFoodController {
     res.data = serviceRes.data;
     return res;
   } // end of getHotFood
+
+  @Post('get-available-food-by-restaurant')
+  @HttpCode(200)
+  async getAvailableFoodByRestaurant(
+    @Body() data: GetAvailableFoodByRestaurantRequest,
+  ): Promise<GetAvailableFoodByRestaurantResponse> {
+    const res = new GetAvailableFoodByRestaurantResponse(200, '');
+    const serviceRes =
+      await this.foodService.getAvailableFoodByRestaurant(data);
+    if (serviceRes.statusCode >= 400) {
+      throw new HttpException(serviceRes, serviceRes.statusCode);
+    }
+    res.statusCode = serviceRes.statusCode;
+    res.message = serviceRes.message;
+    res.data = serviceRes.data;
+
+    return res;
+  } // end of getAvailableFoodByRestaurant
 }
