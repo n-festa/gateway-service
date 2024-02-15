@@ -20,8 +20,6 @@ import { FetchMode } from 'src/enum';
 import { FoodRecommendationResponse } from '../dto/food-recommendation-response.dto';
 import { GetFoodDetailResponse } from '../dto/get-food-detail-response.dto';
 import { GetHotFoodResponse } from '../dto/get-hot-food-response.dto';
-import { GetAvailableDeliveryTimeRequest } from '../dto/get-available-delivery-time-request.dto';
-import { GetAvailableDeliveryTimeResponse } from '../dto/get-available-delivery-time-response.dto';
 import { GetAvailableFoodByRestaurantResponse } from '../dto/get-available-food-by-restaurant-response.dto';
 import { GetAvailableFoodByRestaurantRequest } from '../dto/get-available-food-by-restaurant-request.dto';
 @ApiTags('Web customer food')
