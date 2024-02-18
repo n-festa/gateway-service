@@ -1,7 +1,7 @@
 import { GeneralResponse } from './general-response.dto';
 
 export class GetAvailableDeliveryTimeResponse extends GeneralResponse {
-  data: TimeSlot[];
+  data: TimeSlot[] | number;
 }
 interface TimeSlot {
   dayId: number; // 1->7: Sunday -> Saturday
