@@ -62,6 +62,9 @@ export class WebCustomerController {
     @Body() requestData: UpdateCustomerProfileRequest,
     @User() user: GenericUser,
   ) {
+    if (user.userId !== requestData.customer_id) {
+      throw new UnauthorizedException('Cannot update other user info');
+    }    
     const res = await this.webCustomerService.updateCustomerProfile(
       requestData, 
       user
