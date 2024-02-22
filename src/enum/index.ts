@@ -15,3 +15,9 @@ export enum FetchMode {
   Some = 'some',
   Full = 'full',
 }
+
+export enum SEX {
+  FEMALE = 'F',
+  MALE = 'M',
+  OTHER = 'O',
+}
