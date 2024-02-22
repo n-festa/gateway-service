@@ -24,15 +24,9 @@ export class WebCustomerService {
       this.userClient.send({ cmd: 'get_customer_profile' }, id),
     );
   }
-  async updateCustomerProfile(
-    requestData: UpdateCustomerProfileRequest,
-    userData: GenericUser,
-  ) {
+  async updateCustomerProfile(requestData: UpdateCustomerProfileRequest) {
     return await firstValueFrom(
-      this.userClient.send(
-        { cmd: 'update_customer_profile' },
-        { requestData, userData },
-      ),
+      this.userClient.send({ cmd: 'update_customer_profile' }, { requestData }),
     );
   }
 }
