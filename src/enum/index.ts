@@ -17,6 +17,8 @@ export enum FetchMode {
 }
 
 export enum SEX {
+  female = 'f',
+  male = 'm',
   FEMALE = 'F',
-  MAIL = 'M',
+  MALE = 'M',
 }
