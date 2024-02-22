@@ -1,12 +1,5 @@
-import { 
-  PhysicalActivityLevel,
-  SEX,
-} from 'src/enum';
-import { 
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-} from 'class-validator';
+import { PhysicalActivityLevel, SEX } from 'src/enum';
+import { IsDateString, IsEmail, IsEnum, IsNotEmpty } from 'class-validator';
 
 export class UpdateCustomerProfileRequest {
   @IsNotEmpty()
@@ -16,12 +9,16 @@ export class UpdateCustomerProfileRequest {
   name: string;
 
   @IsNotEmpty()
-  @IsEmail({},{
-    message: 'Invalid email',
-  })
+  @IsEmail(
+    {},
+    {
+      message: 'Invalid email',
+    },
+  )
   email: string;
 
   @IsNotEmpty()
+  @IsDateString()
   birthday: string;
 
   @IsNotEmpty()

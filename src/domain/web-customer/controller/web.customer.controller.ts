@@ -8,7 +8,7 @@ import {
   Post,
   UnauthorizedException,
   UseGuards,
-  Put
+  Put,
 } from '@nestjs/common';
 import { WebCustomerService } from '../service/web.customer.service';
 import { Roles } from 'src/decorator/roles.decorator';
@@ -64,10 +64,10 @@ export class WebCustomerController {
   ) {
     if (user.userId !== requestData.customer_id) {
       throw new UnauthorizedException('Cannot update other user info');
-    }    
+    }
     const res = await this.webCustomerService.updateCustomerProfile(
-      requestData, 
-      user
+      requestData,
+      user,
     );
     if (res.statusCode >= 400) {
       throw new HttpException(res, res.statusCode);

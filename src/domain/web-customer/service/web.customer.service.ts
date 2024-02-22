@@ -29,8 +29,10 @@ export class WebCustomerService {
     userData: GenericUser,
   ) {
     return await firstValueFrom(
-      this.userClient.send({ cmd: 'update_customer_profile' },
-       { requestData, userData })
+      this.userClient.send(
+        { cmd: 'update_customer_profile' },
+        { requestData, userData },
+      ),
     );
   }
 }

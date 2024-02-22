@@ -18,5 +18,5 @@ export enum FetchMode {
 
 export enum SEX {
   FEMALE = 'F',
-  MAIL = 'M'
+  MAIL = 'M',
 }
