@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
   Inject,
   Param,
@@ -18,6 +19,11 @@ import { FetchMode } from 'src/enum';
 import { RestaurantRecommendationResponse } from '../dto/restaurant-recommendation-response.dto';
 import { SendContactFormRequest } from '../dto/send-contact-form-request.dto';
 import { SendContactFormResponse } from '../dto/send-contact-form-response.dto';
+import { WebCustomerAuthService } from '../service/web.customer.auth.service';
+import { VerifyReCaptchaRequest } from '../dto/verify-recaptcha-request.dto';
+import { VerifyReCaptchaResponse } from '../dto/verify-recaptcha-response.dto';
+import { GateWayBadRequestException } from 'src/shared/exceptions/gateway-bad-request.exception';
+import { GeneralErrorResponse } from 'src/shared/dtos/general-error-response.dto';
 
 @ApiTags('Web customer restaurant')
 @Controller('web-customer/restaurant')
@@ -25,6 +31,7 @@ export class WebCustomerRestaurantController {
   constructor(
     private readonly restaurantService: WebCustomerRestaurantService,
     @Inject('FLAGSMITH_SERVICE') private readonly flagService: FlagsmitService,
+    private readonly authService: WebCustomerAuthService,
   ) {}
 
   @Get('get-general-recomendation')
@@ -71,17 +78,41 @@ export class WebCustomerRestaurantController {
   } // end of getRestaurantDetails
 
   @Post('send-contact-form')
+  @HttpCode(200)
   async sendContactForm(
     @Body() data: SendContactFormRequest,
   ): Promise<SendContactFormResponse> {
-    const res = new SendContactFormResponse(200, '');
-    const serviceRes = await this.restaurantService.sendContactForm(data);
-    if (serviceRes.statusCode >= 400) {
-      throw new HttpException(serviceRes, serviceRes.statusCode);
+    const reCaptchaRequestData: VerifyReCaptchaRequest = {
+      verified_token: data.recaptcha_token,
+    };
+    const verifyReCaptchaResult =
+      await this.authService.verifyReCAPTCHA(reCaptchaRequestData);
+
+    if (verifyReCaptchaResult.statusCode != 200) {
+      throw new HttpException(
+        verifyReCaptchaResult.data,
+        verifyReCaptchaResult.statusCode,
+      );
     }
-    res.statusCode = serviceRes.statusCode;
-    res.message = serviceRes.message;
-    res.data = serviceRes.data;
-    return res;
+
+    const verifyReCaptchaResultData: VerifyReCaptchaResponse =
+      verifyReCaptchaResult.data;
+
+    if (!verifyReCaptchaResultData.success) {
+      throw new GateWayBadRequestException(
+        new GeneralErrorResponse(1, verifyReCaptchaResultData['error-codes']),
+      );
+    }
+
+    const sendContactResult =
+      await this.restaurantService.sendContactForm(data);
+    if (sendContactResult.statusCode == 200) {
+      return sendContactResult.data;
+    } else if (sendContactResult.statusCode >= 400) {
+      throw new HttpException(
+        sendContactResult.data,
+        sendContactResult.statusCode,
+      );
+    }
   } //end of sendContactForm
 }

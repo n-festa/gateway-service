@@ -16,7 +16,7 @@ export const validationErrorParser = (errors: ValidationError[]) => {
 
     const clientErrorDetails: ClientErrorDetails = {
       field: error.property,
-      issue: violatedContraints.join(','),
+      issue: violatedContraints.join(', '),
     };
     details.push(clientErrorDetails);
 

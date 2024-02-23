@@ -8,6 +8,7 @@ import { GetRestaurantDetailRequest } from '../dto/get-restaurant-detail-request
 import { RestaurantRecommendationResponse } from '../dto/restaurant-recommendation-response.dto';
 import { SendContactFormRequest } from '../dto/send-contact-form-request.dto';
 import { SendContactFormResponse } from '../dto/send-contact-form-response.dto';
+import { GeneralServiceResponse } from '../dto/general-service-response.dto';
 
 @Injectable()
 export class WebCustomerRestaurantService {
@@ -38,7 +39,7 @@ export class WebCustomerRestaurantService {
 
   async sendContactForm(
     data: SendContactFormRequest,
-  ): Promise<SendContactFormResponse> {
+  ): Promise<GeneralServiceResponse> {
     return await lastValueFrom(
       this.restaurantClient.send({ cmd: 'send_contact_form' }, data),
     );
