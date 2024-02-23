@@ -3,6 +3,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { AuthenOtpRequest } from '../dto/authen-otp-request.dto';
 import { GeneralServiceResponse } from '../dto/general-service-response.dto';
+import { VerifyReCaptchaRequest } from '../dto/verify-recaptcha-request.dto';
 
 @Injectable()
 export class WebCustomerAuthService {
@@ -22,9 +23,11 @@ export class WebCustomerAuthService {
       this.authClient.send({ cmd: 'refresh_token' }, user),
     );
   }
-  async verifyReCAPTCHA(token: string): Promise<GeneralServiceResponse> {
+  async verifyReCAPTCHA(
+    data: VerifyReCaptchaRequest,
+  ): Promise<GeneralServiceResponse> {
     return await firstValueFrom(
-      this.authClient.send({ cmd: 'verify_recaptcha' }, token),
+      this.authClient.send({ cmd: 'verify_recaptcha' }, data),
     );
   }
 }

@@ -61,9 +61,11 @@ export class WebCustomerAuthController {
   async verifyReCAPTCHA(
     @Body() body: VerifyReCaptchaRequest,
   ): Promise<VerifyReCaptchaResponse> {
-    const res = await this.authService.verifyReCAPTCHA(body.verified_token);
+    const res = await this.authService.verifyReCAPTCHA(body);
     if (res.statusCode == 200) {
       return res.data;
+    } else if (res.statusCode >= 400) {
+      throw new HttpException(res.data, res.statusCode);
     }
   }
 }
