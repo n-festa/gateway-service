@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { AuthenOtpRequest } from '../dto/authen-otp-request.dto';
+import { GeneralServiceResponse } from '../dto/general-service-response.dto';
 
 @Injectable()
 export class WebCustomerAuthService {
@@ -19,6 +20,11 @@ export class WebCustomerAuthService {
   async refreshToken(user: any) {
     return await firstValueFrom(
       this.authClient.send({ cmd: 'refresh_token' }, user),
+    );
+  }
+  async verifyReCAPTCHA(token: string): Promise<GeneralServiceResponse> {
+    return await firstValueFrom(
+      this.authClient.send({ cmd: 'verify_recaptcha' }, token),
     );
   }
 }

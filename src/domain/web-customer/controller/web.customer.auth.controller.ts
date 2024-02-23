@@ -14,6 +14,8 @@ import { AuthenOtpRequest } from '../dto/authen-otp-request.dto';
 import { RefreshTokenGuard } from 'src/guards/refresh-token.guard';
 import { User } from 'src/decorator/user.decorator';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { VerifyReCaptchaResponse } from '../dto/verify-recaptcha-response.dto';
+import { VerifyReCaptchaRequest } from '../dto/verify-recaptcha-request.dto';
 
 @ApiTags('Web customer authentication')
 @Controller('web-customer/auth')
@@ -51,5 +53,17 @@ export class WebCustomerAuthController {
       throw new HttpException(res, res.statusCode);
     }
     return res;
+  }
+
+  @ApiResponse({ status: HttpStatus.OK })
+  @HttpCode(200)
+  @Post('verify-reCAPTCHA')
+  async verifyReCAPTCHA(
+    @Body() body: VerifyReCaptchaRequest,
+  ): Promise<VerifyReCaptchaResponse> {
+    const res = await this.authService.verifyReCAPTCHA(body.verified_token);
+    if (res.statusCode == 200) {
+      return res.data;
+    }
   }
 }

@@ -22,8 +22,12 @@ export class ValidatePayloadExistsPipe implements PipeTransform {
       const properties = Object.keys(payload);
 
       if (!properties.length) {
+        // throw new GateWayBadRequestException({
+        //   details: [{ issue: 'Payload should not be empty' }],
+        // });
         throw new GateWayBadRequestException({
-          details: [{ issue: 'Payload should not be empty' }],
+          error_code: 1,
+          detail: 'Payload should not be empty',
         });
       } else if (this.ignoredKeys?.length) {
         const effectiveProps = properties.filter(
@@ -31,12 +35,16 @@ export class ValidatePayloadExistsPipe implements PipeTransform {
         );
 
         if (!effectiveProps?.length) {
+          // throw new GateWayBadRequestException({
+          //   details: [
+          //     {
+          //       issue: `Payload must have properties other than ${this.ignoredKeys}`,
+          //     },
+          //   ],
+          // });
           throw new GateWayBadRequestException({
-            details: [
-              {
-                issue: `Payload must have properties other than ${this.ignoredKeys}`,
-              },
-            ],
+            error_code: 1,
+            detail: `Payload must have properties other than ${this.ignoredKeys}`,
           });
         }
       }
