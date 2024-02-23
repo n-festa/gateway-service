@@ -11,9 +11,8 @@ import {
 import { AhamoveService } from './ahamove.service';
 import { Get } from '@nestjs/common';
 import { Response } from 'express';
-import { MessagePattern } from '@nestjs/microservices';
-import { any } from 'flagsmith-nodejs/build/flagsmith-engine/segments/models';
-import { Subject, connect } from 'rxjs';
+import { Subject } from 'rxjs';
+import { WebOrderService } from 'src/domain/web-customer/service/web.order.service';
 @Controller('ahamove')
 export class AhamoveController {
   private readonly logger = new Logger(AhamoveController.name);
@@ -21,7 +20,10 @@ export class AhamoveController {
     string,
     { close: () => void; subject: Subject<MessageEvent> }
   >();
-  constructor(private readonly ahamoveService: AhamoveService) {}
+  constructor(
+    private readonly ahamoveService: AhamoveService,
+    private readonly orderService: WebOrderService,
+  ) {}
 
   @Get('connect')
   async getCustomerProfile(
@@ -53,7 +55,7 @@ export class AhamoveController {
 
     // Attach the observer to the subject
     subject.subscribe(observer);
-    const order = await this.ahamoveService.getAhamoveOrderByOrderId(orderId);
+    const order = await this.orderService.getOrderById(orderId);
     // Add the client to our client list
     if (order) {
       this.logger.log('Establist connection with client ' + orderId);
@@ -88,13 +90,19 @@ export class AhamoveController {
   /** Send a SSE message to the specified client */
   @Post('webhook')
   async sendDataToClient(@Body() payload: any) {
+    this.logger.log('Incoming data: ' + JSON.stringify(payload));
+
     if (!payload._id) {
       throw new BadRequestException('Tracking number not found');
     }
     try {
+      //TODO: authen
       await this.ahamoveService.saveAhamoveTrackingWebhook(payload);
+      await this.orderService.updateOrderStatusByWebhook(payload._id, payload);
     } catch (error) {
-      this.logger.error('failed to save tracking data ', payload._id, error);
+      this.logger.error(
+        `failed to save tracking data ${payload._id} with ${error}`,
+      );
     }
     let message: MessageEvent = {
       data: payload,
@@ -112,7 +120,6 @@ export class AhamoveController {
   }
 
   @Post('order')
-  @MessagePattern({ cmd: 'create_ahamove_order' })
   postAhamoveOrder(@Body() order) {
     return this.ahamoveService.postAhamoveOrder(order);
   }
