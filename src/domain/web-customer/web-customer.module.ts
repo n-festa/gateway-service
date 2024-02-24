@@ -17,6 +17,7 @@ import { WebCustomerCartController } from './controller/web.customer.cart.contro
 import { WebCustomerCartService } from './service/web.customer.cart.service';
 import { WebCustomerRatingAndReviewController } from './controller/web.customer.rating&review.controller';
 import { WebCustomerRatingAndReviewService } from './service/web.customer.rating&review.service';
+import { WebOrderService } from './service/web.order.service';
 
 @Module({
   imports: [PassportModule.register({}), JwtModule.register({})],
@@ -39,6 +40,7 @@ import { WebCustomerRatingAndReviewService } from './service/web.customer.rating
     WebCustomerCategoryService,
     WebCustomerCartService,
     WebCustomerRatingAndReviewService,
+    WebOrderService,
   ],
   exports: [
     WebCustomerAuthService,
@@ -48,6 +50,8 @@ import { WebCustomerRatingAndReviewService } from './service/web.customer.rating
     WebCustomerCategoryService,
     WebCustomerCartService,
     WebCustomerRatingAndReviewService,
+    WebCustomerService,
+    WebOrderService,
   ],
 })
 export class WebCustomerModule {}
