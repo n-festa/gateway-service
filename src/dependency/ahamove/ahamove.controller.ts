@@ -26,7 +26,7 @@ export class AhamoveController {
   ) {}
 
   @Get('connect')
-  async getCustomerProfile(
+  async createOrderSseConnection(
     @Query('id') orderId: string,
     @Res() response: Response,
   ) {
