@@ -21,3 +21,8 @@ export enum SEX {
   MALE = 'M',
   OTHER = 'O',
 }
+
+export enum FILE_TYPE {
+  IMAGE = 'image',
+  VIDEO = 'video',
+}
