@@ -6,6 +6,8 @@ import { configurationFactory } from './shared/config/configuration-factory';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FlagsmithModule } from './dependency/flagsmith/flagsmith.module';
 import { ClientProxyFactory } from '@nestjs/microservices';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Global()
 @Module({
@@ -17,6 +19,12 @@ import { ClientProxyFactory } from '@nestjs/microservices';
     }),
     WebCustomerModule,
     FlagsmithModule,
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 1,
+      },
+    ]),
   ],
   controllers: [AppController],
   providers: [
@@ -44,6 +52,10 @@ import { ClientProxyFactory } from '@nestjs/microservices';
         return ClientProxyFactory.create(options);
       },
       inject: [ConfigService],
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
   exports: ['RESTAURANT_SERVICE', 'AUTHORIZATION_SERVICE', 'USER_SERVICE'],
