@@ -4,6 +4,7 @@ import { CreateCustomerProfileRequest } from '../dto/create-customer-profile-req
 import { firstValueFrom } from 'rxjs';
 import { GenericUser } from 'src/type';
 import { UpdateCustomerProfileRequest } from '../dto/update-customer-profile-request.dto';
+import { UpdateProfileImageRequest } from '../dto/update-profile-image-request.dto';
 
 @Injectable()
 export class WebCustomerService {
@@ -27,6 +28,16 @@ export class WebCustomerService {
   async updateCustomerProfile(requestData: UpdateCustomerProfileRequest) {
     return await firstValueFrom(
       this.userClient.send({ cmd: 'update_customer_profile' }, { requestData }),
+    );
+  }
+  async uploadImage(fileName: string, file: Buffer) {
+    return await firstValueFrom(
+      this.userClient.send({ cmd: 'upload_image' }, { fileName, file }),
+    );
+  }
+  async updateProfileImage(requestData: UpdateProfileImageRequest) {
+    return await firstValueFrom(
+      this.userClient.send({ cmd: 'update_profile_image' }, { requestData }),
     );
   }
 }

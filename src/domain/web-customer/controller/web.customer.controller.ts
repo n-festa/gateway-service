@@ -9,6 +9,11 @@ import {
   UnauthorizedException,
   UseGuards,
   Put,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { WebCustomerService } from '../service/web.customer.service';
 import { Roles } from 'src/decorator/roles.decorator';
@@ -20,6 +25,8 @@ import { User } from 'src/decorator/user.decorator';
 import { GenericUser } from 'src/type';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdateCustomerProfileRequest } from '../dto/update-customer-profile-request.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UpdateProfileImageRequest } from '../dto/update-profile-image-request.dto';
 
 @ApiTags('Web customer controller')
 @Controller('web-customer')
@@ -67,6 +74,51 @@ export class WebCustomerController {
     }
     const res =
       await this.webCustomerService.updateCustomerProfile(requestData);
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
+    }
+    return res;
+  }
+  @Roles(Role.Customer)
+  @Post('uploadImage')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: {
+        files: 1,
+      },
+    }),
+  )
+  async uploadImage(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 5000,
+          }),
+          new FileTypeValidator({
+            fileType: `^[^\s]+\.(jpg|jpeg|png|gif|bmp|tiff)$`,
+          }),
+        ],
+      }),
+    )
+    _file: Express.Multer.File,
+  ) {
+    const res = await this.webCustomerService.uploadImage(
+      _file.originalname,
+      _file.buffer,
+    );
+    return res;
+  }
+  @Roles(Role.Customer)
+  @Put('updateProfileImage')
+  async updateProfileImage(
+    @Body() requestData: UpdateProfileImageRequest,
+    @User() user: GenericUser,
+  ) {
+    if (requestData.customer_id !== user.userId) {
+      throw new UnauthorizedException('Cannot update other user info');
+    }
+    const res = await this.webCustomerService.updateProfileImage(requestData);
     if (res.statusCode >= 400) {
       throw new HttpException(res, res.statusCode);
     }
