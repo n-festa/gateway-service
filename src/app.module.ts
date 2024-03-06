@@ -7,6 +7,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FlagsmithModule } from './dependency/flagsmith/flagsmith.module';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { AhamoveModule } from './dependency/ahamove/ahamove.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Global()
 @Module({
@@ -19,6 +21,17 @@ import { AhamoveModule } from './dependency/ahamove/ahamove.module';
     WebCustomerModule,
     FlagsmithModule,
     AhamoveModule,
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
+        {
+          ttl: config.get('throttlerConfig.ttl'),
+          limit: config.get('throttlerConfig.limit'),
+          ignoreUserAgents: config.get('throttlerConfig.ignoredUserAgent'),
+        },
+      ],
+    }),
   ],
   controllers: [AppController],
   providers: [
@@ -46,6 +59,10 @@ import { AhamoveModule } from './dependency/ahamove/ahamove.module';
         return ClientProxyFactory.create(options);
       },
       inject: [ConfigService],
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
   exports: ['RESTAURANT_SERVICE', 'AUTHORIZATION_SERVICE', 'USER_SERVICE'],
