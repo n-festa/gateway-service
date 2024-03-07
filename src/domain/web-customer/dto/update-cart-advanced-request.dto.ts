@@ -17,6 +17,8 @@ export class UpdateCartAdvancedRequest {
   notes: string;
   @ApiProperty()
   lang?: string;
+  @ApiProperty()
+  packaging_id?: number;
 }
 
 interface OptionSelection {
