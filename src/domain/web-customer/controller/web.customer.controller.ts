@@ -93,7 +93,7 @@ export class WebCustomerController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({
-            maxSize: 5000,
+            maxSize: 5000000,
           }),
           new FileTypeValidator({
             fileType: `^[^\s]+\.(jpg|jpeg|png|gif|bmp|tiff)$`,
