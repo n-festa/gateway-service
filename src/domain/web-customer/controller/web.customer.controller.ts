@@ -12,7 +12,6 @@ import {
   UploadedFile,
   ParseFilePipe,
   MaxFileSizeValidator,
-  FileTypeValidator,
   UseInterceptors,
 } from '@nestjs/common';
 import { WebCustomerService } from '../service/web.customer.service';
@@ -27,6 +26,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { UpdateCustomerProfileRequest } from '../dto/update-customer-profile-request.dto';
 import { UpdateProfileImageRequest } from '../dto/update-profile-image-request.dto copy';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { DefinedFileTypeValidation } from 'src/shared/validations/defined-file-type-validation.exception';
 
 @ApiTags('Web customer controller')
 @Controller('web-customer')
@@ -93,10 +93,11 @@ export class WebCustomerController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({
-            maxSize: 5000000,
+            maxSize: 50000,
+            message: 'File size must be equal or less than 50Kb',
           }),
-          new FileTypeValidator({
-            fileType: `^[^\s]+\.(jpg|jpeg|png|gif|bmp|tiff)$`,
+          new DefinedFileTypeValidation({
+            fileType: /^[^\s]+\.(jpg|jpeg|png|gif|bmp|tiff)$/,
           }),
         ],
       }),

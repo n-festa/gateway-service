@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { ExecutionContext, Global, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { WebCustomerModule } from './domain/web-customer/web-customer.module';
@@ -28,7 +28,10 @@ import { APP_GUARD } from '@nestjs/core';
         {
           ttl: config.get('throttlerConfig.ttl'),
           limit: config.get('throttlerConfig.limit'),
-          ignoreUserAgents: config.get('throttlerConfig.ignoredUserAgent'),
+          skipIf: (ctx: ExecutionContext) => {
+            const [req] = ctx.getArgs();
+            return req.hostname === 'localhost';
+          },
         },
       ],
     }),

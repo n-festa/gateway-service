@@ -22,6 +22,5 @@ export const configurationFactory = () => ({
   throttlerConfig: {
     ttl: process.env.THROTTLE_TTL || 6000,
     limit: process.env.THROTTLE_LIMIT || 3,
-    ignoredUserAgent: [RegExp(process.env.THROTTLE_IGNORE_USER_AGENT)],
   },
 });
