@@ -97,7 +97,7 @@ export class WebCustomerController {
             message: 'File size must be equal or less than 50Kb',
           }),
           new DefinedFileTypeValidation({
-            fileType: /^[^\s]+\.(jpg|jpeg|png|gif|bmp|tiff)$/,
+            fileType: /^(image[/])+(jpg|jpeg|png|gif|bmp|tiff)$/,
           }),
         ],
       }),
