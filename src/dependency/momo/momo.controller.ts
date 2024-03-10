@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Post, Req } from '@nestjs/common';
+import { Body, Controller, Logger, Post, Req, Res } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { MomoService } from './momo.service';
 @Controller('momo')
@@ -11,11 +11,11 @@ export class MomoController {
   }
 
   @Post('momo-ipn-callback')
-  async momoCallbacksUr1l(@Req() req: Request) {
+  async momoCallbacksUr1l(@Req() req: Request, @Res() res: Response) {
     this.logger.verbose('ipn-post', JSON.stringify(req.body));
     try {
       await this.momoService.momoIpnCallback(req.body);
-      return { message: 'Received' };
+      res.sendStatus(204);
     } catch (error) {
       this.logger.error('ipn-post-error', JSON.stringify(error));
       return { message: 'Error when handle' };
