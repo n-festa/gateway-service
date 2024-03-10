@@ -17,6 +17,10 @@ export class AddToCartRequest {
     required: false,
   })
   lang?: string;
+  @ApiProperty({
+    required: false,
+  })
+  packaging_id?: number;
 }
 
 interface OptionSelection {

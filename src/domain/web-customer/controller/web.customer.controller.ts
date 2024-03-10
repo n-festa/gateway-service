@@ -8,6 +8,7 @@ import {
   Post,
   UnauthorizedException,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 import { WebCustomerService } from '../service/web.customer.service';
 import { Roles } from 'src/decorator/roles.decorator';
@@ -18,6 +19,7 @@ import { CreateCustomerProfileRequest } from '../dto/create-customer-profile-req
 import { User } from 'src/decorator/user.decorator';
 import { GenericUser } from 'src/type';
 import { ApiTags } from '@nestjs/swagger';
+import { UpdateCustomerProfileRequest } from '../dto/update-customer-profile-request.dto';
 
 @ApiTags('Web customer controller')
 @Controller('web-customer')
@@ -49,6 +51,22 @@ export class WebCustomerController {
       throw new UnauthorizedException('Cannot access other user info');
     }
     const res = await this.webCustomerService.getCustomerProfile(parseInt(id));
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
+    }
+    return res;
+  }
+  @Roles(Role.Customer)
+  @Put('customer-profile/updateCustomer')
+  async updateCustomer(
+    @Body() requestData: UpdateCustomerProfileRequest,
+    @User() user: GenericUser,
+  ) {
+    if (user.userId !== requestData.customer_id) {
+      throw new UnauthorizedException('Cannot update other user info');
+    }
+    const res =
+      await this.webCustomerService.updateCustomerProfile(requestData);
     if (res.statusCode >= 400) {
       throw new HttpException(res, res.statusCode);
     }

@@ -26,7 +26,7 @@ export class AhamoveController {
   ) {}
 
   @Get('connect')
-  async getCustomerProfile(
+  async createOrderSseConnection(
     @Query('id') orderId: string,
     @Res() response: Response,
   ) {
@@ -87,9 +87,9 @@ export class AhamoveController {
     response.flushHeaders();
   }
 
-  /** Send a SSE message to the specified client */
+  /** Handle request from Ahamove Webhook */
   @Post('webhook')
-  async sendDataToClient(@Body() payload: any) {
+  async handleAhamoveWebhook(@Body() payload: any) {
     this.logger.log('Incoming data: ' + JSON.stringify(payload));
 
     if (!payload._id) {
@@ -98,19 +98,33 @@ export class AhamoveController {
     try {
       //TODO: authen
       await this.ahamoveService.saveAhamoveTrackingWebhook(payload);
-      await this.orderService.updateOrderStatusByWebhook(payload._id, payload);
+      const updatedOrder = await this.orderService.updateOrderStatusByWebhook(
+        payload._id,
+        payload,
+      );
+      this.sendOrderDataToClient(updatedOrder);
     } catch (error) {
       this.logger.error(
         `failed to save tracking data ${payload._id} with ${error}`,
       );
     }
+  }
+
+  /** Send a SSE message to the specified client */
+  @Post('push-message')
+  async sendOrderDataToClient(@Body() payload: any) {
+    this.logger.log('Incoming data: ' + JSON.stringify(payload));
+
+    if (!payload.order_id) {
+      throw new BadRequestException('Tracking number not found');
+    }
     let message: MessageEvent = {
       data: payload,
     };
-    if (this.connectedClients.get(payload._id)) {
-      return this.connectedClients.get(payload._id)?.subject.next(message);
+    if (this.connectedClients.get(payload.order_id)) {
+      return this.connectedClients.get(payload.order_id)?.subject.next(message);
     } else {
-      this.logger.error('None existed client with id ' + payload._id);
+      this.logger.error('None existed client with id ' + payload.order_id);
     }
   }
 
