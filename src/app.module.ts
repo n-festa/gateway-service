@@ -9,6 +9,7 @@ import { ClientProxyFactory } from '@nestjs/microservices';
 import { AhamoveModule } from './dependency/ahamove/ahamove.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { MomoModule } from './dependency/momo/momo.module';
 
 @Global()
 @Module({
@@ -35,6 +36,7 @@ import { APP_GUARD } from '@nestjs/core';
         },
       ],
     }),
+    MomoModule,
   ],
   controllers: [AppController],
   providers: [
