@@ -103,10 +103,13 @@ export class WebCustomerController {
       }),
     )
     _file: Express.Multer.File,
+    @User() user: GenericUser,
   ) {
+    const fileName = `profile_image_${user.userType}_${user.userId}`;
     const res = await this.webCustomerService.uploadImage(
-      _file.originalname,
+      fileName,
       _file.buffer,
+      _file.mimetype,
     );
     return res;
   }

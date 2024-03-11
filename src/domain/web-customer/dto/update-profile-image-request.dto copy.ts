@@ -1,17 +1,19 @@
-import { IsEnum, IsNotEmpty, IsUrl } from 'class-validator';
-import { FILE_TYPE } from 'src/enum';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsPositive, IsUrl } from 'class-validator';
 
 export class UpdateProfileImageRequest {
-  @IsNotEmpty()
+  @ApiProperty()
+  @IsPositive()
   customer_id: number;
-  @IsNotEmpty()
-  @IsEnum(FILE_TYPE)
-  type: string;
-  @IsNotEmpty()
-  name: string;
-  @IsNotEmpty()
-  description: string;
-  @IsNotEmpty()
+  // @IsNotEmpty()
+  // @IsEnum(FILE_TYPE)
+  // type: string;
+  // @IsNotEmpty()
+  // name: string;
+  // @IsNotEmpty()
+  // description: string;
+  @ApiProperty()
+  // @IsNotEmpty()
   @IsUrl()
   url: string;
 }

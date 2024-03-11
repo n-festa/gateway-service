@@ -30,9 +30,12 @@ export class WebCustomerService {
       this.userClient.send({ cmd: 'update_customer_profile' }, { requestData }),
     );
   }
-  async uploadImage(fileName: string, file: Buffer) {
+  async uploadImage(fileName: string, file: Buffer, fileType: string) {
     return await firstValueFrom(
-      this.userClient.send({ cmd: 'upload_image' }, { fileName, file }),
+      this.userClient.send(
+        { cmd: 'upload_image' },
+        { fileName, file, fileType },
+      ),
     );
   }
   async updateProfileImage(requestData: UpdateProfileImageRequest) {
