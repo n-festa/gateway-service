@@ -9,6 +9,10 @@ import {
   UnauthorizedException,
   UseGuards,
   Put,
+  UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  UseInterceptors,
 } from '@nestjs/common';
 import { WebCustomerService } from '../service/web.customer.service';
 import { Roles } from 'src/decorator/roles.decorator';
@@ -20,6 +24,9 @@ import { User } from 'src/decorator/user.decorator';
 import { GenericUser } from 'src/type';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdateCustomerProfileRequest } from '../dto/update-customer-profile-request.dto';
+import { UpdateProfileImageRequest } from '../dto/update-profile-image-request.dto copy';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { DefinedFileTypeValidation } from 'src/shared/validations/defined-file-type-validation.exception';
 
 @ApiTags('Web customer controller')
 @Controller('web-customer')
@@ -67,6 +74,55 @@ export class WebCustomerController {
     }
     const res =
       await this.webCustomerService.updateCustomerProfile(requestData);
+    if (res.statusCode >= 400) {
+      throw new HttpException(res, res.statusCode);
+    }
+    return res;
+  }
+  @Roles(Role.Customer)
+  @Post('uploadImage')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: {
+        files: 1,
+      },
+    }),
+  )
+  async uploadImage(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 50000,
+            message: 'File size must be equal or less than 50Kb',
+          }),
+          new DefinedFileTypeValidation({
+            fileType: /^(image[/])+(jpg|jpeg|png|gif|bmp|tiff)$/,
+          }),
+        ],
+      }),
+    )
+    _file: Express.Multer.File,
+    @User() user: GenericUser,
+  ) {
+    const fileName = `profile_image_${user.userType}_${user.userId}`;
+    const res = await this.webCustomerService.uploadImage(
+      fileName,
+      _file.buffer,
+      _file.mimetype,
+    );
+    return res;
+  }
+  @Roles(Role.Customer)
+  @Put('updateProfileImage')
+  async updateProfileImage(
+    @Body() requestData: UpdateProfileImageRequest,
+    @User() user: GenericUser,
+  ) {
+    if (requestData.customer_id !== user.userId) {
+      throw new UnauthorizedException('Cannot update other user info');
+    }
+    const res = await this.webCustomerService.updateProfileImage(requestData);
     if (res.statusCode >= 400) {
       throw new HttpException(res, res.statusCode);
     }

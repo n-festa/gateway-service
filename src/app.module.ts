@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { ExecutionContext, Global, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { WebCustomerModule } from './domain/web-customer/web-customer.module';
@@ -7,6 +7,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FlagsmithModule } from './dependency/flagsmith/flagsmith.module';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { AhamoveModule } from './dependency/ahamove/ahamove.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { MomoModule } from './dependency/momo/momo.module';
 
 @Global()
@@ -20,6 +22,20 @@ import { MomoModule } from './dependency/momo/momo.module';
     WebCustomerModule,
     FlagsmithModule,
     AhamoveModule,
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => [
+        {
+          ttl: config.get('throttlerConfig.ttl'),
+          limit: config.get('throttlerConfig.limit'),
+          skipIf: (ctx: ExecutionContext) => {
+            const [req] = ctx.getArgs();
+            return req.hostname === 'localhost';
+          },
+        },
+      ],
+    }),
     MomoModule,
   ],
   controllers: [AppController],
@@ -48,6 +64,10 @@ import { MomoModule } from './dependency/momo/momo.module';
         return ClientProxyFactory.create(options);
       },
       inject: [ConfigService],
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
   exports: ['RESTAURANT_SERVICE', 'AUTHORIZATION_SERVICE', 'USER_SERVICE'],

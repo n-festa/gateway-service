@@ -19,4 +19,8 @@ export const configurationFactory = () => ({
     },
   },
   featureFlag: process.env.FEATURE_FLAG || '',
+  throttlerConfig: {
+    ttl: process.env.THROTTLE_TTL || 6000,
+    limit: process.env.THROTTLE_LIMIT || 3,
+  },
 });
