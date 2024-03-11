@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FlagsmithModule } from './dependency/flagsmith/flagsmith.module';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { AhamoveModule } from './dependency/ahamove/ahamove.module';
+import { MomoModule } from './dependency/momo/momo.module';
 
 @Global()
 @Module({
@@ -19,6 +20,7 @@ import { AhamoveModule } from './dependency/ahamove/ahamove.module';
     WebCustomerModule,
     FlagsmithModule,
     AhamoveModule,
+    MomoModule,
   ],
   controllers: [AppController],
   providers: [
