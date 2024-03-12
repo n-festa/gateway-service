@@ -17,6 +17,9 @@ import { Role } from 'src/enum';
 import { GetApplicationFeeResponse } from '../dto/get-application-fee-response.dto';
 import { GetPaymentMethodResponse } from '../dto/get-payment-method-response.dto';
 import { Public } from 'src/decorator/public.decorator';
+import { GateWayBadRequestException } from 'src/shared/exceptions/gateway-bad-request.exception';
+import { GetCutleryFeeRequest } from '../dto/get-cutlery-fee-request.dto';
+import { GetCutleryFeeResponse } from '../dto/get-cutlery-fee-response.dto';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -51,6 +54,23 @@ export class WebCustomerOrderController {
     } catch (error) {
       if (error?.error_code) {
         throw new HttpException(error, 400);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Post('get-cutlery-fee')
+  @Public()
+  async getCutleryFee(
+    @Body() requestData: GetCutleryFeeRequest,
+  ): Promise<GetCutleryFeeResponse> {
+    try {
+      const res = await this.orderService.getCutleryFee(requestData);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
       } else {
         throw new HttpException(error, 500);
       }
