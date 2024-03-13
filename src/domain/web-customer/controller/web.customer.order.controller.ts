@@ -20,6 +20,8 @@ import { Public } from 'src/decorator/public.decorator';
 import { GateWayBadRequestException } from 'src/shared/exceptions/gateway-bad-request.exception';
 import { GetCutleryFeeRequest } from '../dto/get-cutlery-fee-request.dto';
 import { GetCutleryFeeResponse } from '../dto/get-cutlery-fee-response.dto';
+import { GetCouponInfoRequest } from '../dto/get-coupon-info-request.dto';
+import { GetCouponInfoResponse } from '../dto/get-coupon-info-response.dto';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -67,6 +69,23 @@ export class WebCustomerOrderController {
   ): Promise<GetCutleryFeeResponse> {
     try {
       const res = await this.orderService.getCutleryFee(requestData);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Post('get-coupon-info')
+  @Public()
+  async getCouponInfo(
+    @Body() requestData: GetCouponInfoRequest,
+  ): Promise<GetCouponInfoResponse> {
+    try {
+      const res = await this.orderService.getCouponInfo(requestData);
       return res;
     } catch (error) {
       if (error?.error_code) {
