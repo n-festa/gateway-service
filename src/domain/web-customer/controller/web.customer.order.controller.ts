@@ -24,6 +24,7 @@ import { GetCouponInfoRequest } from '../dto/get-coupon-info-request.dto';
 import { GetCouponInfoResponse } from '../dto/get-coupon-info-response.dto';
 import { ApplyPromotionCodeRequest } from '../dto/apply-promotion-code-request.dto';
 import { ApplyPromotionCodeResponse } from '../dto/apply-promotion-code-response.dto';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -33,6 +34,7 @@ export class WebCustomerOrderController {
   constructor(private readonly orderService: WebCustomerOrderService) {}
 
   @Post('get-application-fee')
+  @SkipThrottle({ default: true })
   @Roles(Role.Customer)
   @HttpCode(200)
   async getApplicationFee(
@@ -65,6 +67,7 @@ export class WebCustomerOrderController {
   }
 
   @Post('get-cutlery-fee')
+  @SkipThrottle({ default: true })
   @Public()
   @HttpCode(200)
   async getCutleryFee(

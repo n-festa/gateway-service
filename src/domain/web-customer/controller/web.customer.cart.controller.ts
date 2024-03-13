@@ -33,6 +33,7 @@ import { GetAvailableDeliveryTimeRequest } from '../dto/get-available-delivery-t
 import { GetAvailableDeliveryTimeResponse } from '../dto/get-available-delivery-time-response.dto';
 import { QuickAddToCartRequest } from '../dto/quick-add-to-cart-request.dto';
 import { QuickAddToCartResponse } from '../dto/quick-add-to-cart-response.dto';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @ApiTags(' Cart')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -45,6 +46,7 @@ export class WebCustomerCartController {
   ) {}
 
   @Post('add')
+  @SkipThrottle({ default: true })
   @Roles(Role.Customer)
   @HttpCode(200)
   async addCartItem(
