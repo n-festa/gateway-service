@@ -8,6 +8,8 @@ import { GetCutleryFeeRequest } from '../dto/get-cutlery-fee-request.dto';
 import { GetCutleryFeeResponse } from '../dto/get-cutlery-fee-response.dto';
 import { GetCouponInfoRequest } from '../dto/get-coupon-info-request.dto';
 import { GetCouponInfoResponse } from '../dto/get-coupon-info-response.dto';
+import { ApplyPromotionCodeRequest } from '../dto/apply-promotion-code-request.dto';
+import { ApplyPromotionCodeResponse } from '../dto/apply-promotion-code-response.dto';
 
 @Injectable()
 export class WebCustomerOrderService {
@@ -43,6 +45,14 @@ export class WebCustomerOrderService {
   ): Promise<GetCouponInfoResponse> {
     return await firstValueFrom(
       this.restaurantClient.send({ cmd: 'get_coupon_info' }, requestData),
+    );
+  }
+
+  async applyCoupon(
+    requestData: ApplyPromotionCodeRequest,
+  ): Promise<ApplyPromotionCodeResponse> {
+    return await firstValueFrom(
+      this.restaurantClient.send({ cmd: 'apply_promotion_code' }, requestData),
     );
   }
 }

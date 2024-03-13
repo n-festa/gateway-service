@@ -22,6 +22,8 @@ import { GetCutleryFeeRequest } from '../dto/get-cutlery-fee-request.dto';
 import { GetCutleryFeeResponse } from '../dto/get-cutlery-fee-response.dto';
 import { GetCouponInfoRequest } from '../dto/get-coupon-info-request.dto';
 import { GetCouponInfoResponse } from '../dto/get-coupon-info-response.dto';
+import { ApplyPromotionCodeRequest } from '../dto/apply-promotion-code-request.dto';
+import { ApplyPromotionCodeResponse } from '../dto/apply-promotion-code-response.dto';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -88,6 +90,24 @@ export class WebCustomerOrderController {
   ): Promise<GetCouponInfoResponse> {
     try {
       const res = await this.orderService.getCouponInfo(requestData);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Post('apply-coupon')
+  @Roles(Role.Customer)
+  @HttpCode(200)
+  async applyCoupon(
+    @Body() requestData: ApplyPromotionCodeRequest,
+  ): Promise<ApplyPromotionCodeResponse> {
+    try {
+      const res = await this.orderService.applyCoupon(requestData);
       return res;
     } catch (error) {
       if (error?.error_code) {
