@@ -29,10 +29,10 @@ import { MomoModule } from './dependency/momo/momo.module';
         {
           ttl: config.get('throttlerConfig.ttl'),
           limit: config.get('throttlerConfig.limit'),
-          skipIf: (ctx: ExecutionContext) => {
-            const [req] = ctx.getArgs();
-            return req.hostname === 'localhost';
-          },
+          // skipIf: (ctx: ExecutionContext) => {
+          //   const [req] = ctx.getArgs();
+          //   return req.hostname === 'localhost';
+          // },
         },
       ],
     }),
