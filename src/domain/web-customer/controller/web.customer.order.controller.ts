@@ -64,6 +64,7 @@ export class WebCustomerOrderController {
 
   @Post('get-cutlery-fee')
   @Public()
+  @HttpCode(200)
   async getCutleryFee(
     @Body() requestData: GetCutleryFeeRequest,
   ): Promise<GetCutleryFeeResponse> {
@@ -80,7 +81,8 @@ export class WebCustomerOrderController {
   }
 
   @Post('get-coupon-info')
-  @Public()
+  @Roles(Role.Customer)
+  @HttpCode(200)
   async getCouponInfo(
     @Body() requestData: GetCouponInfoRequest,
   ): Promise<GetCouponInfoResponse> {
