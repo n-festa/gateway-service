@@ -105,7 +105,7 @@ export class WebCustomerController {
     _file: Express.Multer.File,
     @User() user: GenericUser,
   ) {
-    const fileName = `profile_image_${user.userType}_${user.userId}`;
+    const fileName = `profile_image_${user.userType}_${user.userId}_${Date.now()}`;
     const res = await this.webCustomerService.uploadImage(
       fileName,
       _file.buffer,
