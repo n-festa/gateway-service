@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpException,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -25,6 +26,11 @@ import { GetCouponInfoResponse } from '../dto/get-coupon-info-response.dto';
 import { ApplyPromotionCodeRequest } from '../dto/apply-promotion-code-request.dto';
 import { ApplyPromotionCodeResponse } from '../dto/apply-promotion-code-response.dto';
 import { SkipThrottle } from '@nestjs/throttler';
+import { CreateOrderRequest } from '../dto/create-order-request.dto';
+import { CreateOrderResponse } from '../dto/create-order-response.dto';
+import { User } from 'src/decorator/user.decorator';
+import { GenericUser } from 'src/type';
+import { OrderDetailResponse } from '../dto/order-detail-response.dto';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -111,6 +117,49 @@ export class WebCustomerOrderController {
   ): Promise<ApplyPromotionCodeResponse> {
     try {
       const res = await this.orderService.applyCoupon(requestData);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Post('create')
+  @Roles(Role.Customer)
+  @HttpCode(200)
+  async createOrder(
+    @Body() requestData: CreateOrderRequest,
+    @User() user: GenericUser,
+  ): Promise<CreateOrderResponse> {
+    if (user.userId !== requestData.customer_id) {
+      throw new GateWayBadRequestException({
+        error_code: 2,
+        detail: 'Cannot create an order for other customer',
+      });
+    }
+    try {
+      const res = await this.orderService.createOrder(requestData);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Get(':order_id')
+  @Roles(Role.Customer)
+  async getOrderDetail(
+    @Param('order_id') order_id: number,
+    @User() user: GenericUser,
+  ): Promise<OrderDetailResponse> {
+    try {
+      const res = await this.orderService.getOrderDetail(order_id, user.userId);
       return res;
     } catch (error) {
       if (error?.error_code) {
