@@ -24,6 +24,7 @@ import { VerifyReCaptchaRequest } from '../dto/verify-recaptcha-request.dto';
 import { VerifyReCaptchaResponse } from '../dto/verify-recaptcha-response.dto';
 import { GateWayBadRequestException } from 'src/shared/exceptions/gateway-bad-request.exception';
 import { GeneralErrorResponse } from 'src/shared/dtos/general-error-response.dto';
+import { AhamoveService } from 'src/dependency/ahamove/ahamove.service';
 
 @ApiTags('Web customer restaurant')
 @Controller('web-customer/restaurant')
@@ -32,6 +33,7 @@ export class WebCustomerRestaurantController {
     private readonly restaurantService: WebCustomerRestaurantService,
     @Inject('FLAGSMITH_SERVICE') private readonly flagService: FlagsmitService,
     private readonly authService: WebCustomerAuthService,
+    private readonly ahamoveService: AhamoveService,
   ) {}
 
   @Get('get-general-recomendation')
@@ -115,4 +117,14 @@ export class WebCustomerRestaurantController {
       );
     }
   } //end of sendContactForm
+
+  @Post('estimate')
+  getEstimateFee(@Body() coordinates) {
+    return this.ahamoveService.estimatePrice(coordinates);
+  }
+
+  @Post('order')
+  postAhamoveOrder(@Body() order) {
+    return this.ahamoveService.postAhamoveOrder(order);
+  }
 }

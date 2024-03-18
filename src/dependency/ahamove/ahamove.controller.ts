@@ -127,14 +127,4 @@ export class AhamoveController {
       this.logger.error('None existed client with id ' + payload.order_id);
     }
   }
-
-  @Post('estimate')
-  getEstimateFee(@Body() coordinates) {
-    return this.ahamoveService.estimatePrice(coordinates);
-  }
-
-  @Post('order')
-  postAhamoveOrder(@Body() order) {
-    return this.ahamoveService.postAhamoveOrder(order);
-  }
 }

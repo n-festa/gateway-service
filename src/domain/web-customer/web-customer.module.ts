@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { WebCustomerAuthController } from './controller/web.customer.auth.controller';
 import { WebCustomerAuthService } from './service/web.customer.auth.service';
 import { WebCustomerController } from './controller/web.customer.controller';
@@ -20,9 +20,14 @@ import { WebCustomerRatingAndReviewService } from './service/web.customer.rating
 import { WebOrderService } from './service/web.order.service';
 import { WebCustomerOrderController } from './controller/web.customer.order.controller';
 import { WebCustomerOrderService } from './service/web.customer.order.service';
+import { AhamoveModule } from 'src/dependency/ahamove/ahamove.module';
 
 @Module({
-  imports: [PassportModule.register({}), JwtModule.register({})],
+  imports: [
+    PassportModule.register({}),
+    JwtModule.register({}),
+    forwardRef(() => AhamoveModule),
+  ],
   controllers: [
     WebCustomerAuthController,
     WebCustomerController,

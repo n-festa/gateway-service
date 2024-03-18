@@ -8,8 +8,9 @@ import { FlagsmithModule } from './dependency/flagsmith/flagsmith.module';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { AhamoveModule } from './dependency/ahamove/ahamove.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { MomoModule } from './dependency/momo/momo.module';
+import { GlobalExceptionFilter } from './global.exception';
 
 @Global()
 @Module({
@@ -68,6 +69,10 @@ import { MomoModule } from './dependency/momo/momo.module';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
     },
   ],
   exports: ['RESTAURANT_SERVICE', 'AUTHORIZATION_SERVICE', 'USER_SERVICE'],
