@@ -10,6 +10,9 @@ import { GetCouponInfoRequest } from '../dto/get-coupon-info-request.dto';
 import { GetCouponInfoResponse } from '../dto/get-coupon-info-response.dto';
 import { ApplyPromotionCodeRequest } from '../dto/apply-promotion-code-request.dto';
 import { ApplyPromotionCodeResponse } from '../dto/apply-promotion-code-response.dto';
+import { CreateOrderRequest } from '../dto/create-order-request.dto';
+import { CreateOrderResponse } from '../dto/create-order-response.dto';
+import { OrderDetailResponse } from '../dto/order-detail-response.dto';
 
 @Injectable()
 export class WebCustomerOrderService {
@@ -53,6 +56,24 @@ export class WebCustomerOrderService {
   ): Promise<ApplyPromotionCodeResponse> {
     return await firstValueFrom(
       this.restaurantClient.send({ cmd: 'apply_promotion_code' }, requestData),
+    );
+  }
+
+  async createOrder(data: CreateOrderRequest): Promise<CreateOrderResponse> {
+    return await firstValueFrom(
+      this.restaurantClient.send({ cmd: 'create_order' }, data),
+    );
+  }
+
+  async getOrderDetail(
+    order_id: number,
+    customer_id: number,
+  ): Promise<OrderDetailResponse> {
+    return await firstValueFrom(
+      this.restaurantClient.send(
+        { cmd: 'get_order_detail' },
+        { order_id, customer_id },
+      ),
     );
   }
 }
