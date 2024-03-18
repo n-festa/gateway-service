@@ -4,6 +4,7 @@ import {
   IsArray,
   IsNumber,
   IsObject,
+  IsOptional,
   IsPositive,
   IsString,
   Min,
@@ -85,6 +86,7 @@ export class CreateOrderRequest {
 
   @ApiProperty()
   @Min(0)
+  @IsOptional()
   cutlery_fee: number;
 
   @ApiProperty()
@@ -97,6 +99,7 @@ export class CreateOrderRequest {
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   coupon_code: string;
 
   @ApiProperty()
