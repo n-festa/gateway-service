@@ -13,6 +13,8 @@ import { ApplyPromotionCodeResponse } from '../dto/apply-promotion-code-response
 import { CreateOrderRequest } from '../dto/create-order-request.dto';
 import { CreateOrderResponse } from '../dto/create-order-response.dto';
 import { OrderDetailResponse } from '../dto/order-detail-response.dto';
+import { GetDeliveryFeeRequest } from '../dto/get-delivery-fee-request.dto';
+import { GetDeliveryFeeResonse } from '../dto/get-delivery-fee-response.dto';
 
 @Injectable()
 export class WebCustomerOrderService {
@@ -74,6 +76,14 @@ export class WebCustomerOrderService {
         { cmd: 'get_order_detail' },
         { order_id, customer_id },
       ),
+    );
+  }
+
+  async getDeliveryFee(
+    data: GetDeliveryFeeRequest,
+  ): Promise<GetDeliveryFeeResonse> {
+    return await firstValueFrom(
+      this.restaurantClient.send({ cmd: 'get_delivery_fee' }, data),
     );
   }
 }
