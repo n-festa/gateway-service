@@ -31,6 +31,8 @@ import { CreateOrderResponse } from '../dto/create-order-response.dto';
 import { User } from 'src/decorator/user.decorator';
 import { GenericUser } from 'src/type';
 import { OrderDetailResponse } from '../dto/order-detail-response.dto';
+import { GetDeliveryFeeRequest } from '../dto/get-delivery-fee-request.dto';
+import { GetDeliveryFeeResonse } from '../dto/get-delivery-fee-response.dto';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -160,6 +162,24 @@ export class WebCustomerOrderController {
   ): Promise<OrderDetailResponse> {
     try {
       const res = await this.orderService.getOrderDetail(order_id, user.userId);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Post('get-delivery-fee')
+  @Public()
+  @HttpCode(200)
+  async getDeliveryFee(
+    @Body() requestData: GetDeliveryFeeRequest,
+  ): Promise<GetDeliveryFeeResonse> {
+    try {
+      const res = await this.orderService.getDeliveryFee(requestData);
       return res;
     } catch (error) {
       if (error?.error_code) {
