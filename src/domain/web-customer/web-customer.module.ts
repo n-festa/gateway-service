@@ -21,12 +21,14 @@ import { WebOrderService } from './service/web.order.service';
 import { WebCustomerOrderController } from './controller/web.customer.order.controller';
 import { WebCustomerOrderService } from './service/web.customer.order.service';
 import { AhamoveModule } from 'src/dependency/ahamove/ahamove.module';
+import { MomoModule } from 'src/dependency/momo/momo.module';
 
 @Module({
   imports: [
     PassportModule.register({}),
     JwtModule.register({}),
     forwardRef(() => AhamoveModule),
+    forwardRef(() => MomoModule),
   ],
   controllers: [
     WebCustomerAuthController,
