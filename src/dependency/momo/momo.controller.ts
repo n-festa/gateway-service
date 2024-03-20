@@ -5,10 +5,10 @@ import { MomoService } from './momo.service';
 export class MomoController {
   private readonly logger = new Logger(MomoController.name);
   constructor(private readonly momoService: MomoService) {}
-  @Post('')
-  async createMomoPayment(@Body() payload: any) {
-    return this.momoService.createMomoPayment(payload);
-  }
+  // @Post('')
+  // async createMomoPayment(@Body() payload: any) {
+  //   return this.momoService.createMomoPayment(payload);
+  // }
 
   @Post('momo-ipn-callback')
   async momoCallbacksUr1l(@Req() req: Request, @Res() res: Response) {

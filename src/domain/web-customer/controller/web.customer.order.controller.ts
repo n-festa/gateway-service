@@ -33,13 +33,19 @@ import { GenericUser } from 'src/type';
 import { OrderDetailResponse } from '../dto/order-detail-response.dto';
 import { GetDeliveryFeeRequest } from '../dto/get-delivery-fee-request.dto';
 import { GetDeliveryFeeResonse } from '../dto/get-delivery-fee-response.dto';
+import { MomoService } from 'src/dependency/momo/momo.service';
+import { CreateMomoPaymentRequest } from '../dto/create-momo-payment-request.dto';
+import { CreateMomoPaymentResponse } from '../dto/create-momo-payment-response.dto';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
 @Controller('web-customer/order')
 @Controller()
 export class WebCustomerOrderController {
-  constructor(private readonly orderService: WebCustomerOrderService) {}
+  constructor(
+    private readonly orderService: WebCustomerOrderService,
+    private readonly momoService: MomoService,
+  ) {}
 
   @Post('get-application-fee')
   @SkipThrottle({ default: true })
@@ -180,6 +186,23 @@ export class WebCustomerOrderController {
   ): Promise<GetDeliveryFeeResonse> {
     try {
       const res = await this.orderService.getDeliveryFee(requestData);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Post('create-momo-payment')
+  @Roles(Role.Customer)
+  async createMomoPayment(
+    @Body() payload: CreateMomoPaymentRequest,
+  ): Promise<CreateMomoPaymentResponse> {
+    try {
+      const res = await this.momoService.createMomoPayment(payload);
       return res;
     } catch (error) {
       if (error?.error_code) {
