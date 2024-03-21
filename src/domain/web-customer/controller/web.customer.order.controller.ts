@@ -318,6 +318,7 @@ export class WebCustomerOrderController {
         'private, no-cache, no-store, must-revalidate, max-age=0, no-transform',
       Connection: 'keep-alive',
       'Content-Type': 'text/event-stream',
+      'X-Accel-Buffering': 'no', // Disable buffering for SSE
     });
     response.write(`data: {"clientId": "${clientKey}"} \n\n`);
     response.flushHeaders();
