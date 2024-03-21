@@ -26,3 +26,15 @@ export enum FILE_TYPE {
   IMAGE = 'image',
   VIDEO = 'video',
 }
+
+export enum OrderStatus {
+  CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED',
+  DELIVERING = 'DELIVERING',
+  FAILED = 'FAILED',
+  IDLE = 'IDLE',
+  NEW = 'NEW',
+  PROCESSING = 'PROCESSING',
+  READY = 'READY',
+  STUCK = 'STUCK',
+}

@@ -11,6 +11,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { MomoModule } from './dependency/momo/momo.module';
 import { GlobalExceptionFilter } from './global.exception';
+import { WebRestaurantModule } from './domain/web-restaurant/web-restaurant.module';
 
 @Global()
 @Module({
@@ -38,6 +39,7 @@ import { GlobalExceptionFilter } from './global.exception';
       ],
     }),
     MomoModule,
+    WebRestaurantModule,
   ],
   controllers: [AppController],
   providers: [
