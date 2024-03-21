@@ -44,6 +44,7 @@ import { Response } from 'express';
 import { Subject } from 'rxjs';
 import { EventPattern } from '@nestjs/microservices';
 import { v4 as uuidv4 } from 'uuid';
+import { ChangeOrderStatusForTestingRequest } from '../dto/change-order-status-for-testing-request.dto';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -213,6 +214,7 @@ export class WebCustomerOrderController {
 
   @Post('create-momo-payment')
   @Roles(Role.Customer)
+  @HttpCode(200)
   async createMomoPayment(
     @Body() payload: CreateMomoPaymentRequest,
   ): Promise<CreateMomoPaymentResponse> {
@@ -327,6 +329,7 @@ export class WebCustomerOrderController {
   @EventPattern('order_updated')
   @Public()
   async sendOrderDataToClient(payload) {
+    this.logger.log('sendOrderDataToClient', payload);
     const { order_id } = payload;
 
     const orderDetail = await this.orderService.getOrderDetailSse(order_id);
@@ -340,5 +343,23 @@ export class WebCustomerOrderController {
         client.value.subject.next(message);
       });
     return '';
+  }
+
+  @Post('change-status')
+  @Public()
+  @HttpCode(200)
+  async changeOrderStatusForTesting(
+    @Body() payload: ChangeOrderStatusForTestingRequest,
+  ) {
+    try {
+      const res = await this.orderService.changeOrderStatusForTesting(payload);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
   }
 }

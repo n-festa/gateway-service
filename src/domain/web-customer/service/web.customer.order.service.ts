@@ -98,4 +98,13 @@ export class WebCustomerOrderService {
       this.restaurantClient.send({ cmd: 'get_order_detail_sse' }, { order_id }),
     );
   }
+
+  async changeOrderStatusForTesting(data: any) {
+    return await firstValueFrom(
+      this.restaurantClient.send(
+        { cmd: 'change_order_status_for_testing' },
+        data,
+      ),
+    );
+  }
 }
