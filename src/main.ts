@@ -6,6 +6,7 @@ import { setupSwagger } from './swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { validationErrorParser } from './shared/exceptions/validation-error.parser';
 import { ValidatePayloadExistsPipe } from './shared/pipe-transform/validate-payload-exist.pipe';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -36,8 +37,17 @@ async function bootstrap() {
     credentials: true,
   });
 
-  console.log(`---- APP PORT ${configService.get<number>('appPort')}`);
-  await app.listen(configService.get<number>('appPort') || DEFAULT_PORT);
+  const appPort = configService.get<number>('appPort') || DEFAULT_PORT;
+  const microservice = app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.TCP,
+    options: {
+      port: 4010,
+    },
+  });
+  await app.startAllMicroservices();
+
+  console.log(`---- APP PORT ${appPort}`);
+  await app.listen(appPort);
 
   //Set timezone
   process.env.TZ = 'UTC';
