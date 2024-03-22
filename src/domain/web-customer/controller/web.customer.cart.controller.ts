@@ -123,6 +123,7 @@ export class WebCustomerCartController {
 
   @Post('basic-update')
   @Roles(Role.Customer)
+  @SkipThrottle({ default: true })
   @HttpCode(200)
   async updateCartBasic(
     @User() user: GenericUser,
