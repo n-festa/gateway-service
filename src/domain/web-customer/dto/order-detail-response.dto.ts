@@ -48,6 +48,7 @@ interface OrderItemResponse {
   item_img: string;
   order_id: number;
   sku_id: number;
+  menu_item_id: number;
   qty_ordered: number;
   price: number;
   advanced_taste_customization_obj: OptionSelection[];
