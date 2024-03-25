@@ -91,20 +91,25 @@ export class AhamoveController {
   @Post('webhook')
   async handleAhamoveWebhook(@Body() payload: any) {
     this.logger.log('Incoming data: ' + JSON.stringify(payload));
+    const deliveryOrderId = String(payload._id).split('-')[0];
 
-    if (!payload._id) {
+    if (!deliveryOrderId) {
       throw new BadRequestException('Tracking number not found');
     }
     try {
       //TODO: authen
       await this.ahamoveService.saveAhamoveTrackingWebhook(payload);
-      await this.orderService.updateOrderStatusByWebhook(payload._id, payload);
+      await this.orderService.updateOrderStatusByWebhook(
+        deliveryOrderId,
+        payload,
+      );
       // this.sendOrderDataToClient(updatedOrder);
     } catch (error) {
       this.logger.error(
-        `failed to save tracking data ${payload._id} with ${error}`,
+        `failed to save tracking data ${deliveryOrderId} with ${error}`,
       );
     }
+    return;
   }
 
   // /** Send a SSE message to the specified client */

@@ -262,6 +262,8 @@ export class WebCustomerOrderController {
       });
     }
 
+    const clientKey = uuidv4();
+
     // Create a subject for this client in which we'll push our data
     const subject = new Subject<MessageEvent>();
 
@@ -276,10 +278,10 @@ export class WebCustomerOrderController {
         response.write(`data: ${JSON.stringify(msg.data)}\n\n`);
       },
       complete: () => {
-        console.log(`observer.complete`);
+        this.logger.log(`observer ${clientKey} complete`);
       },
       error: (err: any) => {
-        console.log(`observer.error: ${err}`);
+        console.log(`observer ${clientKey} get error: ${err}`);
       },
     };
 
@@ -287,7 +289,6 @@ export class WebCustomerOrderController {
     subject.subscribe(observer);
 
     // Add the client to our client list
-    const clientKey = uuidv4();
     this.logger.log('Establist connection with client ' + clientKey);
     this.connectedClients.push({
       key: clientKey,
