@@ -15,6 +15,7 @@ import { CreateOrderResponse } from '../dto/create-order-response.dto';
 import { OrderDetailResponse } from '../dto/order-detail-response.dto';
 import { GetDeliveryFeeRequest } from '../dto/get-delivery-fee-request.dto';
 import { GetDeliveryFeeResonse } from '../dto/get-delivery-fee-response.dto';
+import { GetOngoingOrdersResponse } from '../dto/get-ongoing-orders-response.dto';
 
 @Injectable()
 export class WebCustomerOrderService {
@@ -104,6 +105,17 @@ export class WebCustomerOrderService {
       this.restaurantClient.send(
         { cmd: 'change_order_status_for_testing' },
         data,
+      ),
+    );
+  }
+
+  async getCustomerOngoingOrders(
+    customer_id: number,
+  ): Promise<GetOngoingOrdersResponse> {
+    return await firstValueFrom(
+      this.restaurantClient.send(
+        { cmd: 'get_customer_ongoing_orders' },
+        customer_id,
       ),
     );
   }

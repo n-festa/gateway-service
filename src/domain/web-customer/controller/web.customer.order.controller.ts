@@ -45,6 +45,7 @@ import { Subject } from 'rxjs';
 import { EventPattern } from '@nestjs/microservices';
 import { v4 as uuidv4 } from 'uuid';
 import { ChangeOrderStatusForTestingRequest } from '../dto/change-order-status-for-testing-request.dto';
+import { GetOngoingOrdersResponse } from '../dto/get-ongoing-orders-response.dto';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -166,24 +167,6 @@ export class WebCustomerOrderController {
     }
     try {
       const res = await this.orderService.createOrder(requestData);
-      return res;
-    } catch (error) {
-      if (error?.error_code) {
-        throw new GateWayBadRequestException(error);
-      } else {
-        throw new HttpException(error, 500);
-      }
-    }
-  }
-
-  @Get(':order_id')
-  @Roles(Role.Customer)
-  async getOrderDetail(
-    @Param('order_id') order_id: number,
-    @User() user: GenericUser,
-  ): Promise<OrderDetailResponse> {
-    try {
-      const res = await this.orderService.getOrderDetail(order_id, user.userId);
       return res;
     } catch (error) {
       if (error?.error_code) {
@@ -355,6 +338,40 @@ export class WebCustomerOrderController {
   ) {
     try {
       const res = await this.orderService.changeOrderStatusForTesting(payload);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Get('ongoing')
+  async getCustomerOngoingOrders(
+    @User() user: GenericUser,
+  ): Promise<GetOngoingOrdersResponse> {
+    try {
+      const res = await this.orderService.getCustomerOngoingOrders(user.userId);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Get(':order_id')
+  @Roles(Role.Customer)
+  async getOrderDetail(
+    @Param('order_id') order_id: number,
+    @User() user: GenericUser,
+  ): Promise<OrderDetailResponse> {
+    try {
+      const res = await this.orderService.getOrderDetail(order_id, user.userId);
       return res;
     } catch (error) {
       if (error?.error_code) {
