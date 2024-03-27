@@ -46,6 +46,8 @@ import { EventPattern } from '@nestjs/microservices';
 import { v4 as uuidv4 } from 'uuid';
 import { ChangeOrderStatusForTestingRequest } from '../dto/change-order-status-for-testing-request.dto';
 import { GetOngoingOrdersResponse } from '../dto/get-ongoing-orders-response.dto';
+import { GetOrderHistoryByRestaurantRequest } from '../dto/get-order-history-by-restaurant-request.dto';
+import { GetOrderHistoryByRestaurantResponse } from '../dto/get-order-history-by-restaurant-response.dto';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -372,6 +374,32 @@ export class WebCustomerOrderController {
   ): Promise<OrderDetailResponse> {
     try {
       const res = await this.orderService.getOrderDetail(order_id, user.userId);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Post('history-restaurant')
+  @Roles(Role.Customer)
+  async getOrderHistoryByRestaurant(
+    @Body() request_data: GetOrderHistoryByRestaurantRequest,
+    @User() user: GenericUser,
+  ): Promise<GetOrderHistoryByRestaurantResponse> {
+    const { customer_id } = request_data;
+    if (customer_id != user.userId) {
+      throw new GateWayBadRequestException({
+        error_code: 2,
+        detail: "Cannot get other customer's order history",
+      });
+    }
+    try {
+      const res =
+        await this.orderService.getOrderHistoryByRestaurant(request_data);
       return res;
     } catch (error) {
       if (error?.error_code) {
