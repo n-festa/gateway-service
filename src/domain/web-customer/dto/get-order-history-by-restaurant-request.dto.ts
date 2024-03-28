@@ -6,6 +6,7 @@ import {
   IsObject,
   IsOptional,
   IsPositive,
+  IsString,
   Min,
   ValidateNested,
 } from 'class-validator';
@@ -31,6 +32,11 @@ export class GetOrderHistoryByRestaurantRequest {
   @ApiProperty()
   @IsPositive()
   customer_id: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  search_keyword: string;
 
   @ApiProperty()
   @IsEnum(SortType)
