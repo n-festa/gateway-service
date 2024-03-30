@@ -18,6 +18,8 @@ import { GetDeliveryFeeResonse } from '../dto/get-delivery-fee-response.dto';
 import { GetOngoingOrdersResponse } from '../dto/get-ongoing-orders-response.dto';
 import { GetOrderHistoryByRestaurantRequest } from '../dto/get-order-history-by-restaurant-request.dto';
 import { GetOrderHistoryByRestaurantResponse } from '../dto/get-order-history-by-restaurant-response.dto';
+import { GetOrderHistoryByFoodRequest } from '../dto/get-order-history-by-food-request.dto';
+import { GetOrderHistoryByFoodResponse } from '../dto/get-order-history-by-food-response.dto';
 
 @Injectable()
 export class WebCustomerOrderService {
@@ -130,6 +132,14 @@ export class WebCustomerOrderService {
         { cmd: 'get_order_history_by_restaurant' },
         data,
       ),
+    );
+  }
+
+  async getOrderHistoryByFood(
+    data: GetOrderHistoryByFoodRequest,
+  ): Promise<GetOrderHistoryByFoodResponse> {
+    return await firstValueFrom(
+      this.restaurantClient.send({ cmd: 'get_order_history_by_food' }, data),
     );
   }
 }

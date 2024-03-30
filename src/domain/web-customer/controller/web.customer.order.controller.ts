@@ -48,6 +48,8 @@ import { ChangeOrderStatusForTestingRequest } from '../dto/change-order-status-f
 import { GetOngoingOrdersResponse } from '../dto/get-ongoing-orders-response.dto';
 import { GetOrderHistoryByRestaurantRequest } from '../dto/get-order-history-by-restaurant-request.dto';
 import { GetOrderHistoryByRestaurantResponse } from '../dto/get-order-history-by-restaurant-response.dto';
+import { GetOrderHistoryByFoodRequest } from '../dto/get-order-history-by-food-request.dto';
+import { GetOrderHistoryByFoodResponse } from '../dto/get-order-history-by-food-response.dto';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -400,6 +402,31 @@ export class WebCustomerOrderController {
     try {
       const res =
         await this.orderService.getOrderHistoryByRestaurant(request_data);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Post('history-food')
+  @Roles(Role.Customer)
+  async getOrderHistoryByFood(
+    @Body() request_data: GetOrderHistoryByFoodRequest,
+    @User() user: GenericUser,
+  ): Promise<GetOrderHistoryByFoodResponse> {
+    const { customer_id } = request_data;
+    if (customer_id != user.userId) {
+      throw new GateWayBadRequestException({
+        error_code: 2,
+        detail: "Cannot get other customer's order history",
+      });
+    }
+    try {
+      const res = await this.orderService.getOrderHistoryByFood(request_data);
       return res;
     } catch (error) {
       if (error?.error_code) {
