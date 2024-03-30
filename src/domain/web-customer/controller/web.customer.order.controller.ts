@@ -387,6 +387,7 @@ export class WebCustomerOrderController {
   }
 
   @Post('history-restaurant')
+  @HttpCode(200)
   @Roles(Role.Customer)
   async getOrderHistoryByRestaurant(
     @Body() request_data: GetOrderHistoryByRestaurantRequest,
@@ -413,6 +414,7 @@ export class WebCustomerOrderController {
   }
 
   @Post('history-food')
+  @HttpCode(200)
   @Roles(Role.Customer)
   async getOrderHistoryByFood(
     @Body() request_data: GetOrderHistoryByFoodRequest,
