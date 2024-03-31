@@ -12,6 +12,7 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { MomoModule } from './dependency/momo/momo.module';
 import { GlobalExceptionFilter } from './global.exception';
 import { WebRestaurantModule } from './domain/web-restaurant/web-restaurant.module';
+import { AwsModule } from './dependency/aws/aws.module';
 
 @Global()
 @Module({
@@ -40,6 +41,7 @@ import { WebRestaurantModule } from './domain/web-restaurant/web-restaurant.modu
     }),
     MomoModule,
     WebRestaurantModule,
+    AwsModule,
   ],
   controllers: [AppController],
   providers: [
