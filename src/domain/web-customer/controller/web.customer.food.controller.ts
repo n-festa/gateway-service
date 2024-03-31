@@ -22,6 +22,7 @@ import { GetFoodDetailResponse } from '../dto/get-food-detail-response.dto';
 import { GetHotFoodResponse } from '../dto/get-hot-food-response.dto';
 import { GetAvailableFoodByRestaurantResponse } from '../dto/get-available-food-by-restaurant-response.dto';
 import { GetAvailableFoodByRestaurantRequest } from '../dto/get-available-food-by-restaurant-request.dto';
+import { GetSideDishQuery } from '../dto/get-side-dish-query.dto';
 @ApiTags('Web customer food')
 @Controller('web-customer/food')
 export class WebCustomerFoodController {
@@ -87,10 +88,12 @@ export class WebCustomerFoodController {
   @Get('get-side-dish/:id')
   async getSideDishByMenuItemId(
     @Param('id') id: number,
+    @Query() query: GetSideDishQuery,
   ): Promise<GetSideDishResonse> {
     const inputData: GetSideDishRequest = {
       menu_item_id: id,
       timestamp: Date.now(),
+      fetch_mode: query.fetch_mode,
     };
     const res = await this.foodService.getSideDishByMenuItemId(inputData);
     if (res.statusCode >= 400) {
