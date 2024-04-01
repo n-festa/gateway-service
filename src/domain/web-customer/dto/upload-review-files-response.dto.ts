@@ -1,8 +1,11 @@
-import { GeneralResponse } from './general-response.dto';
+// import { GeneralResponse } from './general-response.dto';
 
-export class UploadReviewFileResponse extends GeneralResponse {
-  data: UploadReviewFile;
-}
-interface UploadReviewFile {
+// export class UploadReviewFileResponse extends GeneralResponse {
+//   data: UploadReviewFile;
+// }
+// interface UploadReviewFile {
+//   urls: string[];
+// }
+export class UploadReviewFileResponse {
   urls: string[];
 }

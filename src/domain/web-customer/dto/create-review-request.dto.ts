@@ -4,10 +4,8 @@ import {
   IsArray,
   IsNumber,
   IsObject,
-  IsOptional,
   IsPositive,
   IsString,
-  Min,
   ValidateNested,
 } from 'class-validator';
 
@@ -54,7 +52,7 @@ export class CreateOrderReviewRequestDto {
 
   @ApiProperty()
   @IsArray()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => FoodReview)
-  food_reviews: FoodReview;
+  food_reviews: FoodReview[];
 }
