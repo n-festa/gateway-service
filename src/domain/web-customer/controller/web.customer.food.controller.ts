@@ -23,6 +23,9 @@ import { GetHotFoodResponse } from '../dto/get-hot-food-response.dto';
 import { GetAvailableFoodByRestaurantResponse } from '../dto/get-available-food-by-restaurant-response.dto';
 import { GetAvailableFoodByRestaurantRequest } from '../dto/get-available-food-by-restaurant-request.dto';
 import { GetSideDishQuery } from '../dto/get-side-dish-query.dto';
+import { GetSimilarFoodQuery } from '../dto/get-similar-food-query.dto';
+import { GetSimilarFoodResponse } from '../dto/get-similar-food-response.dto';
+import { GateWayBadRequestException } from 'src/shared/exceptions/gateway-bad-request.exception';
 @ApiTags('Web customer food')
 @Controller('web-customer/food')
 export class WebCustomerFoodController {
@@ -133,4 +136,20 @@ export class WebCustomerFoodController {
 
     return res;
   } // end of getAvailableFoodByRestaurant
+
+  @Get('get-similar-food')
+  async getSimimarFood(
+    @Query() query: GetSimilarFoodQuery,
+  ): Promise<GetSimilarFoodResponse> {
+    try {
+      const res = await this.foodService.getSimilarFood(query);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
 }
