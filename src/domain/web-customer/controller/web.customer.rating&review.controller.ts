@@ -59,7 +59,8 @@ export class WebCustomerRatingAndReviewController {
     return res;
   } //end of getTopReview
 
-  @Get('get-form')
+  @Post('get-form')
+  @HttpCode(200)
   @UseGuards(AccessTokenGuard, RolesGuard)
   @Roles(Role.Customer)
   async getReviewForm(
@@ -180,7 +181,7 @@ export class WebCustomerRatingAndReviewController {
   @HttpCode(200)
   @UseGuards(AccessTokenGuard, RolesGuard)
   @Roles(Role.Customer)
-  async getOrderDetail(
+  async createReviewForm(
     @Body() reviewRequest: CreateOrderReviewRequestDto,
     @User() user: GenericUser,
   ): Promise<CreateOrderReviewResponse> {
