@@ -15,6 +15,11 @@ import { CreateOrderResponse } from '../dto/create-order-response.dto';
 import { OrderDetailResponse } from '../dto/order-detail-response.dto';
 import { GetDeliveryFeeRequest } from '../dto/get-delivery-fee-request.dto';
 import { GetDeliveryFeeResonse } from '../dto/get-delivery-fee-response.dto';
+import { GetOngoingOrdersResponse } from '../dto/get-ongoing-orders-response.dto';
+import { GetOrderHistoryByRestaurantRequest } from '../dto/get-order-history-by-restaurant-request.dto';
+import { GetOrderHistoryByRestaurantResponse } from '../dto/get-order-history-by-restaurant-response.dto';
+import { GetOrderHistoryByFoodRequest } from '../dto/get-order-history-by-food-request.dto';
+import { GetOrderHistoryByFoodResponse } from '../dto/get-order-history-by-food-response.dto';
 
 @Injectable()
 export class WebCustomerOrderService {
@@ -105,6 +110,36 @@ export class WebCustomerOrderService {
         { cmd: 'change_order_status_for_testing' },
         data,
       ),
+    );
+  }
+
+  async getCustomerOngoingOrders(
+    customer_id: number,
+  ): Promise<GetOngoingOrdersResponse> {
+    return await firstValueFrom(
+      this.restaurantClient.send(
+        { cmd: 'get_customer_ongoing_orders' },
+        customer_id,
+      ),
+    );
+  }
+
+  async getOrderHistoryByRestaurant(
+    data: GetOrderHistoryByRestaurantRequest,
+  ): Promise<GetOrderHistoryByRestaurantResponse> {
+    return await firstValueFrom(
+      this.restaurantClient.send(
+        { cmd: 'get_order_history_by_restaurant' },
+        data,
+      ),
+    );
+  }
+
+  async getOrderHistoryByFood(
+    data: GetOrderHistoryByFoodRequest,
+  ): Promise<GetOrderHistoryByFoodResponse> {
+    return await firstValueFrom(
+      this.restaurantClient.send({ cmd: 'get_order_history_by_food' }, data),
     );
   }
 }

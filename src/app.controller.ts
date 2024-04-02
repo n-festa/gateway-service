@@ -10,8 +10,8 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Post('test-webhook')
-  async testWebhook(@Body() data: any) {
-    console.log(data);
-  }
+  // @Post('test-webhook')
+  // async testWebhook(@Body() data: any) {
+  //   console.log(data);
+  // }
 }

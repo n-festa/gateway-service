@@ -1,12 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsOptional } from 'class-validator';
+import { IsEnum, IsNumberString } from 'class-validator';
 import { FetchMode } from 'src/enum';
 
-export class GetAvailableFoodByRestaurantRequest {
+export class GetSimilarFoodQuery {
   @ApiProperty()
+  // @IsPositive()
+  @IsNumberString()
   menu_item_id: number;
+
   @ApiProperty()
   @IsEnum(FetchMode)
-  @IsOptional()
   fetch_mode: FetchMode;
 }

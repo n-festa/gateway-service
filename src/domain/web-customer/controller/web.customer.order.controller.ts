@@ -45,6 +45,11 @@ import { Subject } from 'rxjs';
 import { EventPattern } from '@nestjs/microservices';
 import { v4 as uuidv4 } from 'uuid';
 import { ChangeOrderStatusForTestingRequest } from '../dto/change-order-status-for-testing-request.dto';
+import { GetOngoingOrdersResponse } from '../dto/get-ongoing-orders-response.dto';
+import { GetOrderHistoryByRestaurantRequest } from '../dto/get-order-history-by-restaurant-request.dto';
+import { GetOrderHistoryByRestaurantResponse } from '../dto/get-order-history-by-restaurant-response.dto';
+import { GetOrderHistoryByFoodRequest } from '../dto/get-order-history-by-food-request.dto';
+import { GetOrderHistoryByFoodResponse } from '../dto/get-order-history-by-food-response.dto';
 
 @ApiTags('Order')
 @UseGuards(AccessTokenGuard, RolesGuard)
@@ -176,24 +181,6 @@ export class WebCustomerOrderController {
     }
   }
 
-  @Get(':order_id')
-  @Roles(Role.Customer)
-  async getOrderDetail(
-    @Param('order_id') order_id: number,
-    @User() user: GenericUser,
-  ): Promise<OrderDetailResponse> {
-    try {
-      const res = await this.orderService.getOrderDetail(order_id, user.userId);
-      return res;
-    } catch (error) {
-      if (error?.error_code) {
-        throw new GateWayBadRequestException(error);
-      } else {
-        throw new HttpException(error, 500);
-      }
-    }
-  }
-
   @Post('get-delivery-fee')
   @Public()
   @HttpCode(200)
@@ -262,6 +249,8 @@ export class WebCustomerOrderController {
       });
     }
 
+    const clientKey = uuidv4();
+
     // Create a subject for this client in which we'll push our data
     const subject = new Subject<MessageEvent>();
 
@@ -276,10 +265,10 @@ export class WebCustomerOrderController {
         response.write(`data: ${JSON.stringify(msg.data)}\n\n`);
       },
       complete: () => {
-        console.log(`observer.complete`);
+        this.logger.log(`observer ${clientKey} complete`);
       },
       error: (err: any) => {
-        console.log(`observer.error: ${err}`);
+        console.log(`observer ${clientKey} get error: ${err}`);
       },
     };
 
@@ -287,7 +276,6 @@ export class WebCustomerOrderController {
     subject.subscribe(observer);
 
     // Add the client to our client list
-    const clientKey = uuidv4();
     this.logger.log('Establist connection with client ' + clientKey);
     this.connectedClients.push({
       key: clientKey,
@@ -354,6 +342,93 @@ export class WebCustomerOrderController {
   ) {
     try {
       const res = await this.orderService.changeOrderStatusForTesting(payload);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Get('ongoing')
+  async getCustomerOngoingOrders(
+    @User() user: GenericUser,
+  ): Promise<GetOngoingOrdersResponse> {
+    try {
+      const res = await this.orderService.getCustomerOngoingOrders(user.userId);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Get(':order_id')
+  @Roles(Role.Customer)
+  async getOrderDetail(
+    @Param('order_id') order_id: number,
+    @User() user: GenericUser,
+  ): Promise<OrderDetailResponse> {
+    try {
+      const res = await this.orderService.getOrderDetail(order_id, user.userId);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Post('history-restaurant')
+  @HttpCode(200)
+  @Roles(Role.Customer)
+  async getOrderHistoryByRestaurant(
+    @Body() request_data: GetOrderHistoryByRestaurantRequest,
+    @User() user: GenericUser,
+  ): Promise<GetOrderHistoryByRestaurantResponse> {
+    const { customer_id } = request_data;
+    if (customer_id != user.userId) {
+      throw new GateWayBadRequestException({
+        error_code: 2,
+        detail: "Cannot get other customer's order history",
+      });
+    }
+    try {
+      const res =
+        await this.orderService.getOrderHistoryByRestaurant(request_data);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Post('history-food')
+  @HttpCode(200)
+  @Roles(Role.Customer)
+  async getOrderHistoryByFood(
+    @Body() request_data: GetOrderHistoryByFoodRequest,
+    @User() user: GenericUser,
+  ): Promise<GetOrderHistoryByFoodResponse> {
+    const { customer_id } = request_data;
+    if (customer_id != user.userId) {
+      throw new GateWayBadRequestException({
+        error_code: 2,
+        detail: "Cannot get other customer's order history",
+      });
+    }
+    try {
+      const res = await this.orderService.getOrderHistoryByFood(request_data);
       return res;
     } catch (error) {
       if (error?.error_code) {
