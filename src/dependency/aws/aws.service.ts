@@ -9,18 +9,18 @@ import { ConfigService } from '@nestjs/config';
 export class AwsService {
   private s3: AWS.S3;
   constructor(private readonly configService: ConfigService) {
-    if (this.configService.get('NODE_ENV') === 'development') {
-      this.s3 = new AWS.S3({
-        region: this.configService.get('awsS3.region') || 'ap-southeast-2',
-        accessKeyId: this.configService.get('awsS3.accessKeyId') || '',
-        secretAccessKey: this.configService.get('awsS3.secretAccessKey') || '',
-      });
-    } else {
-      // deploy to ecs no need config access/secret key
-      this.s3 = new AWS.S3({
-        region: this.configService.get('awsS3.region') || 'ap-southeast-2',
-      });
-    }
+    // if (this.configService.get('NODE_ENV') === 'development') {
+    this.s3 = new AWS.S3({
+      region: this.configService.get('awsS3.region') || 'ap-southeast-2',
+      accessKeyId: this.configService.get('awsS3.accessKeyId') || '',
+      secretAccessKey: this.configService.get('awsS3.secretAccessKey') || '',
+    });
+    // } else {
+    //   // deploy to ecs no need config access/secret key
+    //   this.s3 = new AWS.S3({
+    //     region: this.configService.get('awsS3.region') || 'ap-southeast-2',
+    //   });
+    // }
   }
 
   async uploadFileToS3(
