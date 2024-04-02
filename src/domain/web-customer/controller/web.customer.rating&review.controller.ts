@@ -185,16 +185,16 @@ export class WebCustomerRatingAndReviewController {
     @Body() reviewRequest: CreateOrderReviewRequestDto,
     @User() user: GenericUser,
   ): Promise<CreateOrderReviewResponse> {
+    if (user.userId !== reviewRequest.customer_id) {
+      // throw new UnauthorizedException(
+      //   "Cannot update item to other customer's cart",
+      // );
+      throw new GateWayBadRequestException({
+        error_code: 2,
+        detail: "Cannot get other customer's data",
+      });
+    }
     try {
-      if (user.userId !== reviewRequest.customer_id) {
-        // throw new UnauthorizedException(
-        //   "Cannot update item to other customer's cart",
-        // );
-        throw new GateWayBadRequestException({
-          error_code: 2,
-          detail: "Cannot get other customer's data",
-        });
-      }
       const serviceRes =
         await this.ratingAndReviewService.createReviewForm(reviewRequest);
       return serviceRes;

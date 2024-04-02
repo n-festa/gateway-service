@@ -2,23 +2,28 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsNumber,
   IsObject,
   IsPositive,
   IsString,
+  Min,
+  Max,
   ValidateNested,
+  IsOptional,
+  ArrayNotEmpty,
+  IsUrl,
 } from 'class-validator';
 
 class DriverReview {
   @IsPositive()
   driver_id: number;
-  @IsNumber()
+  @Min(1)
+  @Max(5)
   score: string;
   @IsString()
   remarks: string;
   @IsArray()
-  @Type(() => String)
-  @IsString({ each: true })
+  @IsUrl({ protocols: ['https', 'http'] }, { each: true })
+  @IsOptional()
   img_urls: string[];
 }
 
@@ -30,8 +35,8 @@ class FoodReview {
   @IsString()
   remarks: string;
   @IsArray()
-  @Type(() => String)
-  @IsString({ each: true })
+  @IsUrl({ protocols: ['https', 'http'] }, { each: true })
+  @IsOptional()
   img_urls: string[];
 }
 
@@ -52,6 +57,7 @@ export class CreateOrderReviewRequestDto {
 
   @ApiProperty()
   @IsArray()
+  @ArrayNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => FoodReview)
   food_reviews: FoodReview[];
