@@ -22,6 +22,7 @@ import { WebCustomerOrderController } from './controller/web.customer.order.cont
 import { WebCustomerOrderService } from './service/web.customer.order.service';
 import { AhamoveModule } from 'src/dependency/ahamove/ahamove.module';
 import { MomoModule } from 'src/dependency/momo/momo.module';
+import { AwsModule } from 'src/dependency/aws/aws.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { MomoModule } from 'src/dependency/momo/momo.module';
     JwtModule.register({}),
     forwardRef(() => AhamoveModule),
     forwardRef(() => MomoModule),
+    AwsModule,
   ],
   controllers: [
     WebCustomerAuthController,

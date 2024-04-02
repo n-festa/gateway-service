@@ -23,4 +23,12 @@ export const configurationFactory = () => ({
     ttl: process.env.THROTTLE_TTL || 6000,
     limit: process.env.THROTTLE_LIMIT || 3,
   },
+  awsS3: {
+    region: process.env.AWS_REGION || 'ap-southeast-2',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+    cloudfrontDistributionDomain:
+      process.env.AWS_CLOUDFRONT_DISTRIBUTION_DOMAIN ||
+      'https://d2h6tnle5tppss.cloudfront.net',
+  },
 });
