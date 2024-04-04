@@ -2,13 +2,13 @@ export class SearchFoodResponse {
   results: FoodDTO[] | SrestaurantDTO[];
   keyword: string;
   ISO_language_code: string;
-  lat: number;
-  long: number;
+  lat: string;
+  long: string;
   result_type: string;
   sort_type: string;
   filter: string[];
   offset: number;
-  page_size: number;
+  total: number;
   distance_limit_m: number;
   base_distance_for_grouping_m: number;
 }
