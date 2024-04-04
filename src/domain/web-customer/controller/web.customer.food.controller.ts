@@ -26,6 +26,8 @@ import { GetSideDishQuery } from '../dto/get-side-dish-query.dto';
 import { GetSimilarFoodQuery } from '../dto/get-similar-food-query.dto';
 import { GetSimilarFoodResponse } from '../dto/get-similar-food-response.dto';
 import { GateWayBadRequestException } from 'src/shared/exceptions/gateway-bad-request.exception';
+import { SearchFoodRequest } from '../dto/search-food-request.dto';
+import { SearchFoodResponse } from '../dto/search-food-response.dto';
 @ApiTags('Web customer food')
 @Controller('web-customer/food')
 export class WebCustomerFoodController {
@@ -143,6 +145,23 @@ export class WebCustomerFoodController {
   ): Promise<GetSimilarFoodResponse> {
     try {
       const res = await this.foodService.getSimilarFood(query);
+      return res;
+    } catch (error) {
+      if (error?.error_code) {
+        throw new GateWayBadRequestException(error);
+      } else {
+        throw new HttpException(error, 500);
+      }
+    }
+  }
+
+  @Post('search')
+  @HttpCode(200)
+  async searchFood(
+    @Body() searchRequest: SearchFoodRequest,
+  ): Promise<SearchFoodResponse> {
+    try {
+      const res = await this.foodService.searchFood(searchRequest);
       return res;
     } catch (error) {
       if (error?.error_code) {
