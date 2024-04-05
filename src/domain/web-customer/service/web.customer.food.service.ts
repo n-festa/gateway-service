@@ -13,6 +13,8 @@ import { GetAvailableFoodByRestaurantResponse } from '../dto/get-available-food-
 import { GetAvailableFoodByRestaurantRequest } from '../dto/get-available-food-by-restaurant-request.dto';
 import { GetSimilarFoodQuery } from '../dto/get-similar-food-query.dto';
 import { GetSimilarFoodResponse } from '../dto/get-similar-food-response.dto';
+import { SearchFoodRequest } from '../dto/search-food-request.dto';
+import { SearchFoodResponse } from '../dto/search-food-response.dto';
 
 @Injectable()
 export class WebCustomerFoodService {
@@ -80,6 +82,12 @@ export class WebCustomerFoodService {
   ): Promise<GetSimilarFoodResponse> {
     return await lastValueFrom(
       this.restaurantClient.send({ cmd: 'get_similar_food' }, data),
+    );
+  }
+
+  async searchFood(data: SearchFoodRequest): Promise<SearchFoodResponse> {
+    return await lastValueFrom(
+      this.restaurantClient.send({ cmd: 'search_food' }, data),
     );
   }
 }
