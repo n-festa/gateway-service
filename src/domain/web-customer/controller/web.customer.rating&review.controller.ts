@@ -109,8 +109,8 @@ export class WebCustomerRatingAndReviewController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({
-            maxSize: 5000000,
-            message: 'File size must be equal or less than 5MB',
+            maxSize: 500000,
+            message: 'File size must be equal or less than 500KB',
           }),
           new DefinedFileTypeValidation({
             fileType: /^(image[/])+(jpg|jpeg|png|gif|bmp|tiff)$/,
